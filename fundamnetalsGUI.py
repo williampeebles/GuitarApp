@@ -3,13 +3,13 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 
 
-class FundamentalsTab(tk.Frame):
+class FundamentalsTab:
     """
     Fundamentals tab with three buttons stacked vertically in the center.
     """
 
     def __init__(self, parent):
-        super().__init__(parent, bg="#f5f5f5")
+        self.frame = tk.Frame(parent, bg="#f5f5f5")
         self._build_layout()
 
     def _build_layout(self):
@@ -18,7 +18,7 @@ class FundamentalsTab(tk.Frame):
         WIDTH, HEIGHT = 1500, 800
         bg_image = Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.LANCZOS)
         img = ImageTk.PhotoImage(bg_image)
-        lbl = tk.Label(self, image=img)
+        lbl = tk.Label(self.frame, image=img)
         lbl.img = img  # Keep a reference in case this code put is in a function.
         lbl.place(relx=0.5, rely=0.5, anchor='center')  # Place label in center of parent.
 
@@ -27,7 +27,7 @@ class FundamentalsTab(tk.Frame):
         # Create three rounded buttons stacked vertically using customtkinter
         # Place each button individually to avoid white space covering background
         button1 = ctk.CTkButton(
-            self,
+            self.frame,
             text="Posture",
             font=("Arial", 18),
             width=1300,
@@ -43,7 +43,7 @@ class FundamentalsTab(tk.Frame):
         button1.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
 
         button2 = ctk.CTkButton(
-            self,
+            self.frame,
             text="Hand Positioning",
             font=("Arial", 18),
             width=1300,
@@ -59,7 +59,7 @@ class FundamentalsTab(tk.Frame):
         button2.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         button3 = ctk.CTkButton(
-            self,
+            self.frame,
             text="Strumming",
             font=("Arial", 18),
             width=1300,

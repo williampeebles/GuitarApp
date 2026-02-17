@@ -2,14 +2,14 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 
-class DashboardTab(tk.Frame):
+class DashboardTab:
     """
     Dashboard tab layout with a progress panel on the left and
     suggestions/achievements stacked on the right, plus a center content area.
     """
 
     def __init__(self, parent):
-        super().__init__(parent, bg="#f5f5f5")
+        self.frame = tk.Frame(parent, bg="#f5f5f5")
         self._build_layout()
 
     def _build_layout(self):
@@ -18,13 +18,13 @@ class DashboardTab(tk.Frame):
         WIDTH, HEIGHT = 1500, 800
         bg_image = Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.LANCZOS)
         img = ImageTk.PhotoImage(bg_image)
-        lbl = tk.Label(self, image=img)
+        lbl = tk.Label(self.frame, image=img)
         lbl.img = img  # Keep a reference in case this code put is in a function.
         lbl.place(relx=0.5, rely=0.5, anchor='center')  # Place label in center of parent.
 
         # Progress frame on the left
         progress_frame = tk.Frame(
-            self,
+            self.frame,
             bg="#000000",
             relief=tk.SUNKEN,
             bd=2,
@@ -43,7 +43,7 @@ class DashboardTab(tk.Frame):
         progress_label.pack(pady=10)
 
         # Right side container for suggestions and achievements
-        right_container = tk.Frame(self, bg="#f5f5f5")
+        right_container = tk.Frame(self.frame, bg="#f5f5f5")
         right_container.pack(side=tk.RIGHT, fill=tk.BOTH, padx=(5, 10), pady=10, expand=False)
 
         # Suggestions frame on top
@@ -88,7 +88,7 @@ class DashboardTab(tk.Frame):
 
         # Center content area
         content_frame = tk.Frame(
-            self,
+            self.frame,
             bg="#ffffff",
             relief=tk.RIDGE,
             bd=2,

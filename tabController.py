@@ -59,11 +59,11 @@ class TabController:
         """
         # Dashboard Tab
         self.dashboard_tab = DashboardTab(self.notebook)
-        self.notebook.add(self.dashboard_tab, text="Dashboard")
+        self.notebook.add(self.dashboard_tab.frame, text="Dashboard")
         
         # Fundamentals Tab
         self.fundamentals_tab = FundamentalsTab(self.notebook)
-        self.notebook.add(self.fundamentals_tab, text="Fundamentals")
+        self.notebook.add(self.fundamentals_tab.frame, text="Fundamentals")
         
         # Chords Tab
         self.chords_tab = tk.Frame(self.notebook, bg="#f5f5f5")
@@ -102,11 +102,4 @@ class TabController:
         maintenance_label.pack(pady=20, padx=20)
     
     
-    def get_notebook(self):
-        """
-        Return the notebook widget for packing into the parent.
-        
-        Returns:
-            ttk.Notebook: The notebook widget containing all tabs
-        """
-        return self.notebook
+    

@@ -1,14 +1,14 @@
 from tkinter import *
 from tabController import TabController
 
-class GuitarApp(Tk):
+class GuitarApp:
     def __init__(self):
-        super().__init__()
-        self.title("Guitar Learning App")
-        self.geometry("1500x800")
+        self.root = Tk()
+        self.root.title("Guitar Learning App")
+        self.root.geometry("1500x800")
         
         # App banner
-        banner_frame = Frame(self, bg="#000000", relief=RAISED, bd=1)
+        banner_frame = Frame(self.root, bg="#000000", relief=RAISED, bd=1)
         banner_frame.pack(side=TOP, fill=X)
         
         banner_label = Label(
@@ -22,12 +22,12 @@ class GuitarApp(Tk):
         banner_label.pack()
         
         # Create and display the tab controller
-        self.tab_controller = TabController(self)
+        self.tab_controller = TabController(self.root)
         self.tab_controller.get_notebook().pack(fill="both", expand=True)
         
 
 if __name__ == "__main__":
     app = GuitarApp()
-    app.mainloop()
+    app.root.mainloop()
     
     
