@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from dashboardGUI import DashboardTab
+from fundamnetalsGUI import FundamentalsTab
 
 
 class TabController:
@@ -61,16 +62,8 @@ class TabController:
         self.notebook.add(self.dashboard_tab, text="Dashboard")
         
         # Fundamentals Tab
-        self.fundamentals_tab = tk.Frame(self.notebook, bg="#f5f5f5")
+        self.fundamentals_tab = FundamentalsTab(self.notebook)
         self.notebook.add(self.fundamentals_tab, text="Fundamentals")
-        
-        fundamentals_label = tk.Label(
-            self.fundamentals_tab,
-            text="Fundamentals",
-            font=("Arial", 24),
-            bg="#f5f5f5"
-        )
-        fundamentals_label.pack(pady=20, padx=20)
         
         # Chords Tab
         self.chords_tab = tk.Frame(self.notebook, bg="#f5f5f5")

@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 
 
 class DashboardTab(tk.Frame):
@@ -12,6 +13,15 @@ class DashboardTab(tk.Frame):
         self._build_layout()
 
     def _build_layout(self):
+        # Add background image
+        IMAGE_PATH = 'wooden_bg.jpg'
+        WIDTH, HEIGHT = 1500, 800
+        bg_image = Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.LANCZOS)
+        img = ImageTk.PhotoImage(bg_image)
+        lbl = tk.Label(self, image=img)
+        lbl.img = img  # Keep a reference in case this code put is in a function.
+        lbl.place(relx=0.5, rely=0.5, anchor='center')  # Place label in center of parent.
+
         # Progress frame on the left
         progress_frame = tk.Frame(
             self,
