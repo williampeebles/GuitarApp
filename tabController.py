@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 from dashboardGUI import DashboardTab
-from fundamnetalsGUI import FundamentalsTab
+from fundamentalsGUI import FundamentalsTab
+
+DEFAULT_CATEGORIES = ("Fundamentals", "Chords", "Songs", "Maintenance")
 
 
 class TabController:
@@ -101,5 +103,11 @@ class TabController:
         )
         maintenance_label.pack(pady=20, padx=20)
     
+    def get_notebook(self):
+        """Returns the notebook widget."""
+        return self.notebook
     
-    
+    def close(self):
+        """Close all tabs and their resources."""
+        if self.fundamentals_tab:
+            self.fundamentals_tab.close()

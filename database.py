@@ -6,17 +6,16 @@ class Database:
     
     DATABASE_PATH = 'guitar_app.db'
     
-    @staticmethod
-    def initialize_database():
-        """Create the SQLite database with categoryElements and categories tables.
-        
-        This should only be called once during initial setup, not every time the app runs.
-        """
-        conn = sqlite3.connect(Database.DATABASE_PATH)
-        cursor = conn.cursor()
-        
+    def __init__(self, database_path=None):
+        """Initialize database with optional custom path."""
+        self.database_path = database_path or Database.DATABASE_PATH
+        self.conn = sqlite3.connect(self.database_path)
+        self.cursor = self.conn.cursor()
+    
+    def create_schema(self):
+        """Create the database schema (tables only)."""
         # Create categories table
-        cursor.execute('''
+        self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS categories (
                 category_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name_text TEXT NOT NULL,
@@ -28,7 +27,7 @@ class Database:
         ''')
         
         # Create categoryElements table
-        cursor.execute('''
+        self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS categoryElements (
                 element_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 category_id INTEGER NOT NULL,
@@ -39,6 +38,10 @@ class Database:
             )
         ''')
         
-        conn.commit()
-        conn.close()
+        self.conn.commit()
+    
+    def close(self):
+        """Close the database connection."""
+        if self.conn:
+            self.conn.close()
 
