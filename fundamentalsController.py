@@ -13,6 +13,7 @@ class FundamentalsController:
         self.current_topic = None
         self.current_lesson = None
         self.last_quiz_questions = []
+        self.quiz_bank_by_lesson = FundamentalsContent.QUIZ_BANK_BY_LESSON
         self.quiz_bank_by_topic = FundamentalsContent.QUIZ_BANK_BY_TOPIC
         self.lesson_items_by_topic = FundamentalsContent.LESSON_ITEMS_BY_TOPIC
         self.lesson_content = FundamentalsContent.LESSON_CONTENT
@@ -38,7 +39,9 @@ class FundamentalsController:
         return self.lesson_content.get(lesson, f"Content for {lesson}\n\nThis lesson content will be added soon.")
 
     def get_quiz_questions(self, lesson, topic):
-        questions = list(self.quiz_bank_by_topic.get(topic, []))
+        questions = list(self.quiz_bank_by_lesson.get(lesson, []))
+        if not questions:
+            questions = list(self.quiz_bank_by_topic.get(topic, []))
         if len(questions) < 5:
             questions.extend(FundamentalsContent.EXTRA_QUIZ_QUESTIONS)
         return questions[:5]
