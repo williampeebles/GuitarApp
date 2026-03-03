@@ -2,12 +2,12 @@ from tkinter import *
 from PIL import Image, ImageTk
 from tabController import TabController, DEFAULT_CATEGORIES
 from fundamentalsContent import FundamentalsContent
+from chordsContent import ChordsContent
 from database import Database
 from databaseController import DatabaseController
 
 class GuitarApp:
     def __init__(self):
-        self.db = Database()
         self.root = Tk()
         self.root.title("Guitar Learning App")
         self.root.geometry("1500x800")
@@ -34,7 +34,7 @@ class GuitarApp:
             
             # Create text on canvas (no background)
             banner_canvas.create_text(750, 50, text="GUITAR APP", font=("Arial", 28, "bold"), fill="#000000")
-        except Exception as e:
+        except Exception:
             # Fallback to black background if image not found
             banner_label = Label(
                 banner_frame,
@@ -56,11 +56,16 @@ class GuitarApp:
     def on_close(self):
         """Update database and close the application."""
         db_controller = DatabaseController()
-        db_controller.seed_initial_data(DEFAULT_CATEGORIES, FundamentalsContent.FUNDAMENTALS_LESSONS)
+        db_controller.seed_initial_data(
+            DEFAULT_CATEGORIES,
+            FundamentalsContent.FUNDAMENTALS_LESSONS,
+            ChordsContent.CHORD_NAMES,
+            FundamentalsContent.QUIZ_BANK_BY_LESSON,
+            FundamentalsContent.QUIZ_BANK_BY_TOPIC,
+            FundamentalsContent.EXTRA_QUIZ_QUESTIONS,
+        )
         db_controller.close()
-        # Close all database connections
         self.tab_controller.close()
-        self.db.close()
         self.root.destroy()
         
 
@@ -72,7 +77,14 @@ if __name__ == "__main__":
     
     # Seed initial data
     db_controller = DatabaseController()
-    db_controller.seed_initial_data(DEFAULT_CATEGORIES, FundamentalsContent.FUNDAMENTALS_LESSONS)
+    db_controller.seed_initial_data(
+        DEFAULT_CATEGORIES,
+        FundamentalsContent.FUNDAMENTALS_LESSONS,
+        ChordsContent.CHORD_NAMES,
+        FundamentalsContent.QUIZ_BANK_BY_LESSON,
+        FundamentalsContent.QUIZ_BANK_BY_TOPIC,
+        FundamentalsContent.EXTRA_QUIZ_QUESTIONS,
+    )
     db_controller.close()
     
     # Start application

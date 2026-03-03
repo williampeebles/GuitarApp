@@ -44,27 +44,16 @@ class FundamentalsTab:
         lbl.image = self.background_image  # Keep a reference
         lbl.place(relx=0.5, rely=0.5, anchor='center')
 
-        # Create three rounded buttons stacked vertically using customtkinter
-        button1 = ctk.CTkButton(
-            self.frame,
-            text="Posture",
-            font=("Arial", 18),
-            width=1300,
-            height=150,
-            fg_color="#000000",
-            text_color="white",
-            hover_color="#333333",
-            corner_radius=0,
-            border_width=0,
-            cursor="hand2",
-            bg_color="#1f1913",
-            command=lambda: self._show_topic_view("Posture")
-        )
-        button1.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
+        # Create three topic buttons stacked vertically
+        self._make_topic_button("Posture",          rely=0.2, bg_color="#1f1913")
+        self._make_topic_button("Hand Positioning", rely=0.5, bg_color="#625040")
+        self._make_topic_button("Strumming",        rely=0.8, bg_color="#222728")
 
-        button2 = ctk.CTkButton(
+    def _make_topic_button(self, text, rely, bg_color):
+        """Create and place a single topic selection button on the menu screen."""
+        button = ctk.CTkButton(
             self.frame,
-            text="Hand Positioning",
+            text=text,
             font=("Arial", 18),
             width=1300,
             height=150,
@@ -74,44 +63,39 @@ class FundamentalsTab:
             corner_radius=0,
             border_width=0,
             cursor="hand2",
-            bg_color="#625040",
-            command=lambda: self._show_topic_view("Hand Positioning")
+            bg_color=bg_color,
+            command=lambda t=text: self._show_topic_view(t),
         )
-        button2.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-
-        button3 = ctk.CTkButton(
-            self.frame,
-            text="Strumming",
-            font=("Arial", 18),
-            width=1300,
-            height=150,
-            fg_color="#000000",
-            text_color="white",
-            hover_color="#333333",
-            corner_radius=0,
-            border_width=0,
-            cursor="hand2",
-            bg_color="#222728",
-            command=lambda: self._show_topic_view("Strumming")
-        )
-        button3.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
+        button.place(relx=0.5, rely=rely, anchor=tk.CENTER)
+        return button
         
     def _show_topic_view(self, topic_name):
         """Display the detail page for the selected topic with an animated lesson sidebar."""
         self.controller.set_topic(topic_name)
-        # Clear frame
+
+        # Clear all existing widgets from the frame before rebuilding
         for widget in self.frame.winfo_children():
             widget.destroy()
 
-        # Create main container
         container = ctk.CTkFrame(self.frame, fg_color="transparent")
         container.pack(fill="both", expand=True)
 
-        # Create button container to hold back and lessons buttons
+        self._build_topic_navigation(container, topic_name)
+
+        content_container = ctk.CTkFrame(container, fg_color="transparent")
+        content_container.pack(fill="both", expand=True, padx=20, pady=20)
+        content_container.grid_rowconfigure(0, weight=1)
+        content_container.grid_columnconfigure(0, weight=1)
+        content_container.grid_anchor("center")
+
+        self._build_lesson_area(content_container)
+        self._build_lesson_sidebar(content_container, topic_name)
+
+    def _build_topic_navigation(self, container, topic_name):
+        """Build the back button, sidebar toggle, and topic title."""
         button_container = ctk.CTkFrame(container, fg_color="transparent")
         button_container.pack(pady=10)
-        
-        # Add back button
+
         back_button = ctk.CTkButton(
             button_container,
             text="← Back",
@@ -120,11 +104,11 @@ class FundamentalsTab:
             fg_color="#333333",
             text_color="white",
             hover_color="#555555",
-            command=self._show_menu_view
+            command=self._show_menu_view,
         )
         back_button.pack(side=tk.LEFT, padx=5)
-        
-        # Add lessons toggle button
+
+        # The toggle button calls _toggle_sidebar, which opens/closes the lesson list
         self.toggle_button = ctk.CTkButton(
             button_container,
             text="≡ Lessons",
@@ -133,49 +117,41 @@ class FundamentalsTab:
             fg_color="#333333",
             text_color="white",
             hover_color="#555555",
-            command=lambda: self.sidebar_panel.animate() if hasattr(self, 'sidebar_panel') else None
+            command=self._toggle_sidebar,
         )
         self.toggle_button.pack(side=tk.LEFT, padx=5)
-        
-        # Add title
+
         title_label = ctk.CTkLabel(
             container,
             text=topic_name,
             font=("Arial", 28, "bold"),
             text_color="#000000",
-            fg_color="transparent"
+            fg_color="transparent",
         )
         title_label.pack(pady=20)
-        
-        # Create a frame to hold the content area and sidebar
-        content_container = ctk.CTkFrame(container, fg_color="transparent")
-        content_container.pack(fill="both", expand=True, padx=20, pady=20)
-        content_container.grid_rowconfigure(0, weight=1)
-        content_container.grid_columnconfigure(0, weight=1)
-        content_container.grid_anchor("center")
-        
-        # Main content area centered with a fixed width
+
+    def _build_lesson_area(self, content_container):
+        """Build the main lesson content area: title label, text display, and scrollbar."""
+        # Fixed-size white box that holds the lesson content
         main_content = tk.Frame(content_container, bg="white", relief=tk.SUNKEN, bd=1, width=1100, height=700)
         main_content.grid(row=0, column=0)
         main_content.pack_propagate(False)
-        
-        # Create lesson display area
+
         lesson_frame = tk.Frame(main_content, bg="white")
         lesson_frame.pack(fill="both", expand=True, padx=12, pady=12)
-        
-        # Label to show selected lesson
+
         self.lesson_title_label = tk.Label(
             lesson_frame,
             text="Select a lesson from the sidebar",
             font=("Arial", 18, "bold"),
             bg="white",
-            fg="#333333"
+            fg="#333333",
         )
         self.lesson_title_label.pack(pady=20)
-        
-        # Text widget for lesson content
+
         text_container = tk.Frame(lesson_frame, bg="white")
         text_container.pack(fill="both", expand=True, padx=20, pady=20)
+
         self.lesson_content_text = tk.Text(
             text_container,
             bg="white",
@@ -185,46 +161,34 @@ class FundamentalsTab:
             bd=0,
             wrap=tk.WORD,
             padx=15,
-            pady=15
+            pady=15,
         )
         self.lesson_content_text.pack(side=tk.LEFT, fill="both", expand=True)
-        
-        # Scrollbar for lesson content
+
         scrollbar = tk.Scrollbar(text_container, command=self.lesson_content_text.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.lesson_content_text.configure(yscrollcommand=scrollbar.set)
-        self.lesson_content_text.configure(state="disabled")
+        self.lesson_content_text.configure(yscrollcommand=scrollbar.set, state="disabled")
 
         self.quiz_container = None
-        
-        # Create animated sidebar panel
+
+    def _build_lesson_sidebar(self, content_container, topic_name):
+        """Build the animated slide-out sidebar with lesson selection buttons."""
         self.sidebar_panel = SlidePanel(content_container, -0.35, 0.0)
         self.sidebar_panel.configure(fg_color="#2b2b2b")
-        
-        # Update toggle button command now that sidebar exists
-        self.toggle_button.configure(command=self.sidebar_panel.animate)
-        
-        # Add sidebar title
+
         sidebar_title = ctk.CTkLabel(
             self.sidebar_panel,
             text="Lessons",
             font=("Arial", 16, "bold"),
-            text_color="white"
+            text_color="white",
         )
         sidebar_title.pack(pady=10)
-        
-        # Create scrollable frame for lesson buttons
-        scrollable_frame = ctk.CTkScrollableFrame(
-            self.sidebar_panel,
-            fg_color="#2b2b2b",
-            label_text=""
-        )
+
+        scrollable_frame = ctk.CTkScrollableFrame(self.sidebar_panel, fg_color="#2b2b2b", label_text="")
         scrollable_frame.pack(fill="both", expand=True, padx=5, pady=5)
-        
-        # Add lesson buttons to sidebar
-        sample_items = self.controller.get_lessons_for_topic(topic_name)
+
         self.lesson_buttons = {}
-        for lesson_name in sample_items:
+        for lesson_name in self.controller.get_lessons_for_topic(topic_name):
             display_text = self.controller.get_lesson_button_text(lesson_name)
             lesson_btn = ctk.CTkButton(
                 scrollable_frame,
@@ -234,10 +198,15 @@ class FundamentalsTab:
                 text_color="white",
                 hover_color="#505050",
                 corner_radius=5,
-                command=lambda lesson=lesson_name: self._update_lesson_content(lesson)
+                command=lambda lesson=lesson_name: self._update_lesson_content(lesson),
             )
             lesson_btn.pack(fill="x", padx=5, pady=5)
             self.lesson_buttons[lesson_name] = lesson_btn
+
+    def _toggle_sidebar(self):
+        """Open or close the lesson selector sidebar."""
+        if self.sidebar_panel:
+            self.sidebar_panel.animate()
     
     def _update_lesson_content(self, lesson):
         """Update the lesson content display when a sidebar button is clicked."""

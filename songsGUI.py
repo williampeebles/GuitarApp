@@ -1,0 +1,105 @@
+import tkinter as tk
+from PIL import Image, ImageTk
+from songsController import SongsController
+
+
+class SongsTab:
+    """Songs tab with wooden background."""
+
+    def __init__(self, parent):
+        self.controller = SongsController()
+        self.frame = tk.Frame(parent, bg="#f5f5f5")
+        self.background_image = None
+        self._build_layout()
+
+    def _build_layout(self):
+        try:
+            image_path = self.controller.get_background_image_path()
+            bg_image = Image.open(image_path).resize((1500, 800), Image.LANCZOS)
+            self.background_image = ImageTk.PhotoImage(bg_image)
+            bg_label = tk.Label(self.frame, image=self.background_image, bd=0)
+            bg_label.image = self.background_image
+            bg_label.place(relx=0.5, rely=0.5, anchor="center")
+        except Exception:
+            self.frame.configure(bg="#f5f5f5")
+
+        songs_label = tk.Label(
+            self.frame,
+            text=self.controller.get_tab_title(),
+            font=("Arial", 24),
+            bg="#f5f5f5",
+            fg="black",
+        )
+        songs_label.pack(pady=(20, 10), padx=20)
+
+        content_container = tk.Frame(self.frame, bg="#f5f5f5")
+        content_container.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 20))
+        content_container.grid_rowconfigure(0, weight=1)
+        content_container.grid_columnconfigure(0, weight=1)
+        content_container.grid_columnconfigure(1, weight=1)
+
+        left_frame = tk.Frame(content_container, bg="white", relief=tk.SUNKEN, bd=1)
+        left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+
+        right_frame = tk.Frame(content_container, bg="white", relief=tk.SUNKEN, bd=1)
+        right_frame.grid(row=0, column=1, sticky="nsew", padx=(10, 0))
+
+        songs_title = tk.Label(
+            left_frame,
+            text=self.controller.get_list_title(),
+            font=("Arial", 14, "bold"),
+            bg="white",
+            fg="#111111",
+        )
+        songs_title.pack(anchor="w", padx=12, pady=(12, 8))
+
+        list_container = tk.Frame(left_frame, bg="white")
+        list_container.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        list_container.grid_rowconfigure(0, weight=1)
+        list_container.grid_columnconfigure(0, weight=1)
+
+        list_canvas = tk.Canvas(list_container, bg="white", highlightthickness=0)
+        list_canvas.grid(row=0, column=0, sticky="nsew")
+
+        scrollbar = tk.Scrollbar(list_container, orient="vertical", command=list_canvas.yview)
+        scrollbar.grid(row=0, column=1, sticky="ns")
+        list_canvas.configure(yscrollcommand=scrollbar.set)
+
+        links_frame = tk.Frame(list_canvas, bg="white")
+        links_window = list_canvas.create_window((0, 0), window=links_frame, anchor="nw")
+
+        # These two functions keep the canvas scroll area in sync with its contents.
+        # _sync_scroll_region: updates the scrollable area whenever a new link is added.
+        # _sync_inner_width: stretches the inner frame to always fill the canvas width.
+        def _sync_scroll_region(_event):
+            list_canvas.configure(scrollregion=list_canvas.bbox("all"))
+
+        def _sync_inner_width(event):
+            list_canvas.itemconfigure(links_window, width=event.width)
+
+        links_frame.bind("<Configure>", _sync_scroll_region)
+        list_canvas.bind("<Configure>", _sync_inner_width)
+
+        for song_title, url in self.controller.get_song_tutorials():
+            link_label = tk.Label(
+                links_frame,
+                text=song_title,
+                font=("Arial", 11, "underline"),
+                fg="#1f4fbf",
+                bg="white",
+                cursor="hand2",
+                justify="left",
+                anchor="w",
+                wraplength=420,
+            )
+            link_label.pack(fill="x", padx=6, pady=(4, 2), anchor="w")
+            link_label.bind("<Button-1>", lambda _event, target=url: self.controller.open_song_link(target))
+
+        right_label = tk.Label(
+            right_frame,
+            text=self.controller.get_empty_state_text(),
+            font=("Arial", 14),
+            bg="white",
+            fg="#444444",
+        )
+        right_label.pack(pady=20)

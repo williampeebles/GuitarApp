@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from dashboardGUI import DashboardTab
 from fundamentalsGUI import FundamentalsTab
+from chordsGUI import ChordsTab
+from songsGUI import SongsTab
 
 DEFAULT_CATEGORIES = ("Fundamentals", "Chords", "Songs", "Maintenance")
 
@@ -68,28 +70,12 @@ class TabController:
         self.notebook.add(self.fundamentals_tab.frame, text="Fundamentals")
         
         # Chords Tab
-        self.chords_tab = tk.Frame(self.notebook, bg="#f5f5f5")
-        self.notebook.add(self.chords_tab, text="Chords")
-        
-        chords_label = tk.Label(
-            self.chords_tab,
-            text="Chords",
-            font=("Arial", 24),
-            bg="#f5f5f5"
-        )
-        chords_label.pack(pady=20, padx=20)
+        self.chords_tab = ChordsTab(self.notebook)
+        self.notebook.add(self.chords_tab.frame, text="Chords")
         
         # Songs Tab
-        self.songs_tab = tk.Frame(self.notebook, bg="#f5f5f5")
-        self.notebook.add(self.songs_tab, text="Songs")
-        
-        songs_label = tk.Label(
-            self.songs_tab,
-            text="Songs",
-            font=("Arial", 24),
-            bg="#f5f5f5"
-        )
-        songs_label.pack(pady=20, padx=20)
+        self.songs_tab = SongsTab(self.notebook)
+        self.notebook.add(self.songs_tab.frame, text="Songs")
         
         # Maintenance Tab
         self.maintenance_tab = tk.Frame(self.notebook, bg="#f5f5f5")
@@ -109,5 +95,7 @@ class TabController:
     
     def close(self):
         """Close all tabs and their resources."""
+        if self.chords_tab:
+            self.chords_tab.close()
         if self.fundamentals_tab:
             self.fundamentals_tab.close()
