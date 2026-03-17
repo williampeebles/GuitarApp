@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from tabController import TabController, DEFAULT_CATEGORIES
 from fundamentalsContent import FundamentalsContent
+from maintenanceContent import MaintenanceContent
 from chordsContent import ChordsContent
 from database import Database
 from databaseController import DatabaseController
@@ -57,12 +58,13 @@ class GuitarApp:
         """Update database and close the application."""
         db_controller = DatabaseController()
         db_controller.seed_initial_data(
-            DEFAULT_CATEGORIES,
-            FundamentalsContent.FUNDAMENTALS_LESSONS,
-            ChordsContent.CHORD_NAMES,
-            FundamentalsContent.QUIZ_BANK_BY_LESSON,
-            FundamentalsContent.QUIZ_BANK_BY_TOPIC,
-            FundamentalsContent.EXTRA_QUIZ_QUESTIONS,
+            category_names=DEFAULT_CATEGORIES,
+            fundamentals_lessons=FundamentalsContent.FUNDAMENTALS_LESSONS,
+            maintenance_lessons=MaintenanceContent.MAINTENANCE_LESSONS,
+            chord_names=ChordsContent.CHORD_NAMES,
+            quiz_bank_by_lesson=FundamentalsContent.QUIZ_BANK_BY_LESSON,
+            quiz_bank_by_topic=FundamentalsContent.QUIZ_BANK_BY_TOPIC,
+            extra_quiz_questions=FundamentalsContent.EXTRA_QUIZ_QUESTIONS,
         )
         db_controller.close()
         self.tab_controller.close()
@@ -78,12 +80,13 @@ if __name__ == "__main__":
     # Seed initial data
     db_controller = DatabaseController()
     db_controller.seed_initial_data(
-        DEFAULT_CATEGORIES,
-        FundamentalsContent.FUNDAMENTALS_LESSONS,
-        ChordsContent.CHORD_NAMES,
-        FundamentalsContent.QUIZ_BANK_BY_LESSON,
-        FundamentalsContent.QUIZ_BANK_BY_TOPIC,
-        FundamentalsContent.EXTRA_QUIZ_QUESTIONS,
+        category_names=DEFAULT_CATEGORIES,
+        fundamentals_lessons=FundamentalsContent.FUNDAMENTALS_LESSONS,
+        maintenance_lessons=MaintenanceContent.MAINTENANCE_LESSONS,
+        chord_names=ChordsContent.CHORD_NAMES,
+        quiz_bank_by_lesson=FundamentalsContent.QUIZ_BANK_BY_LESSON,
+        quiz_bank_by_topic=FundamentalsContent.QUIZ_BANK_BY_TOPIC,
+        extra_quiz_questions=FundamentalsContent.EXTRA_QUIZ_QUESTIONS,
     )
     db_controller.close()
     

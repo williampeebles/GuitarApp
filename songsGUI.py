@@ -1,6 +1,6 @@
 import tkinter as tk
-from PIL import Image, ImageTk
 from songsController import SongsController
+from woodBackground import WoodBackgroundManager
 
 
 class SongsTab:
@@ -9,19 +9,14 @@ class SongsTab:
     def __init__(self, parent):
         self.controller = SongsController()
         self.frame = tk.Frame(parent, bg="#f5f5f5")
-        self.background_image = None
+        self.background_manager = WoodBackgroundManager(
+            self.frame,
+            image_name=self.controller.get_background_image_path(),
+        )
         self._build_layout()
 
     def _build_layout(self):
-        try:
-            image_path = self.controller.get_background_image_path()
-            bg_image = Image.open(image_path).resize((1500, 800), Image.LANCZOS)
-            self.background_image = ImageTk.PhotoImage(bg_image)
-            bg_label = tk.Label(self.frame, image=self.background_image, bd=0)
-            bg_label.image = self.background_image
-            bg_label.place(relx=0.5, rely=0.5, anchor="center")
-        except Exception:
-            self.frame.configure(bg="#f5f5f5")
+        self.background_manager.apply()
 
         songs_label = tk.Label(
             self.frame,

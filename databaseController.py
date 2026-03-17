@@ -128,6 +128,7 @@ class DatabaseController:
         self,
         category_names=None,
         fundamentals_lessons=None,
+        maintenance_lessons=None,
         chord_names=None,
         quiz_bank_by_lesson=None,
         quiz_bank_by_topic=None,
@@ -136,6 +137,7 @@ class DatabaseController:
         """Seed the database with all initial data on first launch."""
         self._seed_categories(category_names or ())
         self._seed_fundamentals_lessons(fundamentals_lessons or ())
+        self._seed_maintenance_lessons(maintenance_lessons or ())
         self._seed_chords(chord_names or ())
         self._seed_quiz_bank(
             quiz_bank_by_lesson or {},
@@ -163,6 +165,19 @@ class DatabaseController:
             if lesson_name not in existing_names:
                 self.insert_element(fundamentals_id, lesson_name)
         self.update_category_progress(fundamentals_id)
+
+    def _seed_maintenance_lessons(self, maintenance_lessons):
+        """Insert any Maintenance lesson element that does not already exist."""
+        maintenance_category = self.get_category_by_name("Maintenance")
+        if not maintenance_category:
+            return
+        maintenance_id = maintenance_category["category_id"]
+        existing_elements = self.get_elements_by_category(maintenance_id)
+        existing_names = {elem["element_type"] for elem in existing_elements}
+        for lesson_name in maintenance_lessons:
+            if lesson_name not in existing_names:
+                self.insert_element(maintenance_id, lesson_name)
+        self.update_category_progress(maintenance_id)
 
     def _seed_chords(self, chord_names):
         """Insert any Chords element that does not already exist."""

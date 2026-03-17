@@ -1,31 +1,27 @@
 import tkinter as tk
 import customtkinter as ctk
-from fundamentalsController import FundamentalsController
+from maintenanceController import MaintenanceController
 from slide_panel import SlidePanel
 from woodBackground import WoodBackgroundManager
 
 
-class FundamentalsTab:
-    """
-    Fundamentals tab with a single persistent lesson view and a sidebar
-    containing all topic sections and lessons.
-    """
+class MaintenanceTab:
+    """Maintenance tab with sectioned lessons in a slide-out panel."""
 
     def __init__(self, parent):
         self.frame = tk.Frame(parent, bg="#f5f5f5")
+        self.controller = MaintenanceController()
+        self.sidebar_panel = None
         self.background_manager = WoodBackgroundManager(self.frame)
-        self.sidebar_panel = None  # Store reference to sidebar panel
         self.lesson_buttons = {}
         self.quiz_container = None
         self.quiz_status_label = None
         self.start_quiz_button = None
         self.quiz_vars = []
         self.quiz_questions = []
-        self.controller = FundamentalsController()
         self._build_layout()
 
     def _build_layout(self):
-        """Build a single fundamentals view with grouped sections in the sidebar."""
         for widget in self.frame.winfo_children():
             widget.destroy()
 
@@ -58,7 +54,6 @@ class FundamentalsTab:
         self._build_lesson_sidebar(content_container)
 
     def _build_lesson_area(self, content_container):
-        """Build the main lesson content area: title label, text display, and scrollbar."""
         main_content = tk.Frame(content_container, bg="white", relief=tk.SUNKEN, bd=1)
         main_content.grid(row=0, column=0, sticky="nsew")
 
@@ -97,13 +92,12 @@ class FundamentalsTab:
         self.quiz_container = None
 
     def _build_lesson_sidebar(self, content_container):
-        """Build the sidebar with all topic sections and lesson buttons."""
         self.sidebar_panel = SlidePanel(content_container, -0.35, 0.0)
         self.sidebar_panel.configure(fg_color="#2b2b2b")
 
         sidebar_title = ctk.CTkLabel(
             self.sidebar_panel,
-            text="Fundamentals Sections",
+            text="Maintenance Sections",
             font=("Arial", 16, "bold"),
             text_color="white",
         )
@@ -138,32 +132,28 @@ class FundamentalsTab:
                 self.lesson_buttons[lesson_name] = lesson_btn
 
     def _toggle_sidebar(self):
-        """Open or close the lesson selector sidebar."""
         if self.sidebar_panel:
             self.sidebar_panel.animate()
-    
-    def _update_lesson_content(self, topic_name, lesson):
-        """Update the lesson content display when a sidebar button is clicked."""
-        if self.lesson_title_label and self.lesson_content_text:
-            self.controller.set_topic(topic_name)
-            self.controller.set_lesson(lesson)
-            self.lesson_title_label.configure(text=lesson)
-            
-            # Get and display lesson content
-            lesson_content = self.controller.get_lesson_content(lesson)
-            self.lesson_content_text.configure(state="normal")
-            self.lesson_content_text.delete("1.0", tk.END)
-            self.lesson_content_text.insert(tk.END, lesson_content)
-            self.lesson_content_text.insert(tk.END, "\n\n")
 
-            if self.quiz_container:
-                self.quiz_container.destroy()
-            self.quiz_container = tk.Frame(self.lesson_content_text, bg="white")
-            self.lesson_content_text.window_create(tk.END, window=self.quiz_container)
-            self.lesson_content_text.insert(tk.END, "\n")
-            self.lesson_content_text.configure(state="disabled")
+    def _update_lesson_content(self, topic_name, lesson_name):
+        self.controller.set_topic(topic_name)
+        self.controller.set_lesson(lesson_name)
+        self.lesson_title_label.configure(text=lesson_name)
 
-            self._reset_quiz_ui()
+        lesson_content = self.controller.get_lesson_content(lesson_name)
+        self.lesson_content_text.configure(state="normal")
+        self.lesson_content_text.delete("1.0", tk.END)
+        self.lesson_content_text.insert(tk.END, lesson_content)
+        self.lesson_content_text.insert(tk.END, "\n\n")
+
+        if self.quiz_container:
+            self.quiz_container.destroy()
+        self.quiz_container = tk.Frame(self.lesson_content_text, bg="white")
+        self.lesson_content_text.window_create(tk.END, window=self.quiz_container)
+        self.lesson_content_text.insert(tk.END, "\n")
+        self.lesson_content_text.configure(state="disabled")
+
+        self._reset_quiz_ui()
 
     def _reset_quiz_ui(self):
         if not self.quiz_container:
@@ -182,7 +172,7 @@ class FundamentalsTab:
             text=status_text,
             bg="white",
             fg="#333333",
-            font=("Arial", 11)
+            font=("Arial", 11),
         )
         self.quiz_status_label.pack(anchor="w")
 
@@ -193,7 +183,7 @@ class FundamentalsTab:
             fg_color="#333333",
             text_color="white",
             hover_color="#555555",
-            command=self._start_quiz
+            command=self._start_quiz,
         )
         self.start_quiz_button.pack(anchor="w", pady=(8, 0))
 
@@ -221,7 +211,7 @@ class FundamentalsTab:
                 font=("Arial", 11, "bold"),
                 anchor="w",
                 justify="left",
-                wraplength=900
+                wraplength=900,
             )
             prompt.pack(anchor="w", pady=(6, 0))
 
@@ -239,7 +229,7 @@ class FundamentalsTab:
                     selectcolor="white",
                     anchor="w",
                     justify="left",
-                    wraplength=900
+                    wraplength=900,
                 )
                 choice_btn.pack(anchor="w")
 
@@ -250,7 +240,7 @@ class FundamentalsTab:
             fg_color="#333333",
             text_color="white",
             hover_color="#555555",
-            command=self._submit_quiz
+            command=self._submit_quiz,
         )
         submit_button.pack(anchor="w", pady=(10, 0))
 
@@ -259,22 +249,11 @@ class FundamentalsTab:
             text="",
             bg="white",
             fg="#333333",
-            font=("Arial", 11)
+            font=("Arial", 11),
         )
         self.quiz_status_label.pack(anchor="w", pady=(6, 0))
+
         self._bind_quiz_mousewheel(self.quiz_container)
-
-    def _bind_quiz_mousewheel(self, root_widget):
-        """Bind quiz widgets to scroll the lesson text area with the mouse wheel."""
-        root_widget.bind("<MouseWheel>", self._on_quiz_mousewheel, add="+")
-        for child in root_widget.winfo_children():
-            self._bind_quiz_mousewheel(child)
-
-    def _on_quiz_mousewheel(self, event):
-        """Forward wheel scrolling from quiz widgets to the lesson text widget."""
-        if self.lesson_content_text:
-            self.lesson_content_text.yview_scroll(int(-1 * (event.delta / 120)), "units")
-        return "break"
 
     def _submit_quiz(self):
         if not self.quiz_questions or not self.quiz_vars:
@@ -289,13 +268,21 @@ class FundamentalsTab:
         if result["message"]:
             self.quiz_status_label.configure(text=result["message"])
 
-    def _update_lesson_button_state(self, lesson):
-        lesson_btn = self.lesson_buttons.get(lesson)
+    def _update_lesson_button_state(self, lesson_name):
+        lesson_btn = self.lesson_buttons.get(lesson_name)
         if lesson_btn:
-            lesson_btn.configure(text=self.controller.get_lesson_button_text(lesson))
-    
+            lesson_btn.configure(text=self.controller.get_lesson_button_text(lesson_name))
+
+    def _bind_quiz_mousewheel(self, root_widget):
+        root_widget.bind("<MouseWheel>", self._on_quiz_mousewheel, add="+")
+        for child in root_widget.winfo_children():
+            self._bind_quiz_mousewheel(child)
+
+    def _on_quiz_mousewheel(self, event):
+        if self.lesson_content_text:
+            self.lesson_content_text.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        return "break"
+
     def close(self):
-        """Close the fundamentals controller and its resources."""
         if self.controller:
             self.controller.close()
-

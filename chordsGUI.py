@@ -1,9 +1,8 @@
 import tkinter as tk
 import customtkinter as ctk
-import os
-from PIL import Image, ImageTk
 from chordsController import ChordsController
 from slide_panel import SlidePanel
+from woodBackground import WoodBackgroundManager
 
 
 class ChordsTab:
@@ -13,9 +12,7 @@ class ChordsTab:
         self.controller = ChordsController()
         self.frame = tk.Frame(parent, bg="#f5f5f5")
         self.sidebar_panel = None
-        self.background_image = None
-        self.background_label = None
-        self.background_source = None
+        self.background_manager = WoodBackgroundManager(self.frame)
         self.current_chord_name = self.controller.get_default_chord()
         self.header_title_var = tk.StringVar(value=self.controller.get_default_chord())
         self.chord_label_var = tk.StringVar(value="")
@@ -27,7 +24,7 @@ class ChordsTab:
         self._show_chord(self.controller.get_default_chord())
 
     def _build_layout(self):
-        self._set_wood_background()
+        self.background_manager.apply()
 
         # Content overlay frame on top of wooden background
         content_frame = tk.Frame(self.frame, bg="white", relief=tk.RIDGE, bd=1)
@@ -67,47 +64,6 @@ class ChordsTab:
 
         self._build_chord_detail(content_container)
         self._build_chord_sidebar(content_container)
-
-    def _set_wood_background(self):
-        try:
-            image_path = os.path.join(os.path.dirname(__file__), "wooden_bg.jpg")
-            self.background_source = Image.open(image_path)
-            initial_image = self._get_cover_cropped_image(1500, 800)
-            self.background_image = ImageTk.PhotoImage(initial_image)
-            self.background_label = tk.Label(self.frame, image=self.background_image, bd=0)
-            self.background_label.image = self.background_image
-            self.background_label.place(x=0, y=0, relwidth=1, relheight=1)
-            self.background_label.lower()
-            self.frame.bind("<Configure>", self._update_background_image)
-        except Exception:
-            self.frame.configure(bg="#f5f5f5")
-
-    def _update_background_image(self, event):
-        if not self.background_source or not self.background_label:
-            return
-
-        width = max(event.width, 1)
-        height = max(event.height, 1)
-        resized = self._get_cover_cropped_image(width, height)
-        self.background_image = ImageTk.PhotoImage(resized)
-        self.background_label.configure(image=self.background_image)
-        self.background_label.image = self.background_image
-        self.background_label.lower()
-
-    def _get_cover_cropped_image(self, target_width, target_height):
-        source_width, source_height = self.background_source.size
-        scale = max(target_width / source_width, target_height / source_height)
-        resized_width = int(source_width * scale)
-        resized_height = int(source_height * scale)
-
-        resized_image = self.background_source.resize((resized_width, resized_height), Image.LANCZOS)
-
-        left = max((resized_width - target_width) // 2, 0)
-        top = max((resized_height - target_height) // 2, 0)
-        right = left + target_width
-        bottom = top + target_height
-
-        return resized_image.crop((left, top, right, bottom))
 
     def _build_chord_sidebar(self, parent):
         self.sidebar_panel = SlidePanel(parent, -0.35, 0.0)

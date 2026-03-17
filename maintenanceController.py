@@ -1,26 +1,25 @@
+from maintenanceContent import MaintenanceContent
 from databaseController import DatabaseController
-from fundamentalsContent import FundamentalsContent
 
 
-class FundamentalsController:
-    """Holds fundamentals data and persistence logic."""
+class MaintenanceController:
+    """Provides maintenance lesson data and selection state."""
 
     def __init__(self):
         self.db = DatabaseController()
         self.category_id = None
+        self.lesson_items_by_topic = MaintenanceContent.LESSON_ITEMS_BY_TOPIC
+        self.lesson_content = MaintenanceContent.LESSON_CONTENT
+        self.quiz_bank_by_lesson = MaintenanceContent.QUIZ_BANK_BY_LESSON
+        self.quiz_bank_by_topic = MaintenanceContent.QUIZ_BANK_BY_TOPIC
         self.completed_lessons = set()
-        self.current_view = "menu"
         self.current_topic = None
         self.current_lesson = None
         self.last_quiz_questions = []
-        self.quiz_bank_by_lesson = FundamentalsContent.QUIZ_BANK_BY_LESSON
-        self.quiz_bank_by_topic = FundamentalsContent.QUIZ_BANK_BY_TOPIC
-        self.lesson_items_by_topic = FundamentalsContent.LESSON_ITEMS_BY_TOPIC
-        self.lesson_content = FundamentalsContent.LESSON_CONTENT
         self._load_completed_lessons()
 
     def _load_completed_lessons(self):
-        category = self.db.get_category_by_name("Fundamentals")
+        category = self.db.get_category_by_name("Maintenance")
         if not category:
             return
 
@@ -32,51 +31,24 @@ class FundamentalsController:
             if element.get("completed")
         }
 
-    def get_lessons_for_topic(self, topic_name):
-        return list(self.lesson_items_by_topic.get(topic_name, ["Lesson 1: Introduction"]))
-
     def get_all_topics(self):
         return list(self.lesson_items_by_topic.keys())
 
-    def get_topic_for_lesson(self, lesson_name):
-        for topic_name, lessons in self.lesson_items_by_topic.items():
-            if lesson_name in lessons:
-                return topic_name
-        return None
-
-    def get_lesson_content(self, lesson):
-        return self.lesson_content.get(lesson, f"Content for {lesson}\n\nThis lesson content will be added soon.")
-
-    def get_quiz_questions(self, lesson, topic):
-        questions = list(self.quiz_bank_by_lesson.get(lesson, []))
-        if not questions:
-            questions = list(self.quiz_bank_by_topic.get(topic, []))
-        if len(questions) < 5:
-            questions.extend(FundamentalsContent.EXTRA_QUIZ_QUESTIONS)
-        return questions[:5]
-
-    def mark_lesson_completed(self, lesson_name):
-        if self.category_id is None:
-            return
-
-        self.db.mark_element_completed(self.category_id, lesson_name, completed=1)
-        self.completed_lessons.add(lesson_name)
-
-    def set_menu_view(self):
-        self.current_view = "menu"
-        self.current_topic = None
-        self.current_lesson = None
-        self.last_quiz_questions = []
+    def get_lessons_for_topic(self, topic_name):
+        return list(self.lesson_items_by_topic.get(topic_name, []))
 
     def set_topic(self, topic_name):
-        self.current_view = topic_name
         self.current_topic = topic_name
-        self.current_lesson = None
-        self.last_quiz_questions = []
 
     def set_lesson(self, lesson_name):
         self.current_lesson = lesson_name
         self.last_quiz_questions = []
+
+    def get_lesson_content(self, lesson_name):
+        return self.lesson_content.get(
+            lesson_name,
+            f"Content for {lesson_name}\\n\\nThis lesson content will be added soon.",
+        )
 
     def get_current_lesson(self):
         return self.current_lesson
@@ -88,6 +60,14 @@ class FundamentalsController:
         if self.is_lesson_completed(lesson_name):
             return f"{lesson_name} [Completed]"
         return lesson_name
+
+    def get_quiz_questions(self, lesson_name, topic_name):
+        questions = list(self.quiz_bank_by_lesson.get(lesson_name, []))
+        if not questions:
+            questions = list(self.quiz_bank_by_topic.get(topic_name, []))
+        if len(questions) < 5:
+            questions.extend(MaintenanceContent.EXTRA_QUIZ_QUESTIONS)
+        return questions[:5]
 
     def start_quiz_for_current(self):
         if not self.current_lesson or not self.current_topic:
@@ -141,8 +121,14 @@ class FundamentalsController:
             "total": total,
             "completed_now": completed_now,
         }
-    
+
+    def mark_lesson_completed(self, lesson_name):
+        if self.category_id is None:
+            return
+
+        self.db.mark_element_completed(self.category_id, lesson_name, completed=1)
+        self.completed_lessons.add(lesson_name)
+
     def close(self):
-        """Close the database controller connection."""
         if self.db:
             self.db.close()

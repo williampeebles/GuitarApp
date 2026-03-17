@@ -4,6 +4,7 @@ from dashboardGUI import DashboardTab
 from fundamentalsGUI import FundamentalsTab
 from chordsGUI import ChordsTab
 from songsGUI import SongsTab
+from maintenanceGUI import MaintenanceTab
 
 DEFAULT_CATEGORIES = ("Fundamentals", "Chords", "Songs", "Maintenance")
 
@@ -78,16 +79,8 @@ class TabController:
         self.notebook.add(self.songs_tab.frame, text="Songs")
         
         # Maintenance Tab
-        self.maintenance_tab = tk.Frame(self.notebook, bg="#f5f5f5")
-        self.notebook.add(self.maintenance_tab, text="Maintenance")
-        
-        maintenance_label = tk.Label(
-            self.maintenance_tab,
-            text="Maintenance",
-            font=("Arial", 24),
-            bg="#f5f5f5"
-        )
-        maintenance_label.pack(pady=20, padx=20)
+        self.maintenance_tab = MaintenanceTab(self.notebook)
+        self.notebook.add(self.maintenance_tab.frame, text="Maintenance")
     
     def get_notebook(self):
         """Returns the notebook widget."""
@@ -95,7 +88,11 @@ class TabController:
     
     def close(self):
         """Close all tabs and their resources."""
+        if self.dashboard_tab:
+            self.dashboard_tab.close()
         if self.chords_tab:
             self.chords_tab.close()
         if self.fundamentals_tab:
             self.fundamentals_tab.close()
+        if self.maintenance_tab:
+            self.maintenance_tab.close()
