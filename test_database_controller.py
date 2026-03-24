@@ -113,6 +113,43 @@ class TestDatabaseController(unittest.TestCase):
         lesson_names = {lesson["element_type"] for lesson in lessons}
         self.assertEqual(lesson_names, {"Lesson A", "Lesson B", "Lesson C"})
 
+    # Seeded elements should receive category-default XP values in the DB.
+    def test_seeded_elements_store_default_experience_points(self):
+        self.controller.seed_initial_data(
+            category_names=["Fundamentals", "Maintenance", "Chords"],
+            fundamentals_lessons=["F1"],
+            maintenance_lessons=["M1"],
+            chord_names=["C"],
+        )
+
+        fundamentals = self.controller.get_category_by_name("Fundamentals")
+        maintenance = self.controller.get_category_by_name("Maintenance")
+        chords = self.controller.get_category_by_name("Chords")
+
+        fundamentals_element = self.controller.get_elements_by_category(fundamentals["category_id"])[0]
+        maintenance_element = self.controller.get_elements_by_category(maintenance["category_id"])[0]
+        chord_element = self.controller.get_elements_by_category(chords["category_id"])[0]
+
+        self.assertEqual(fundamentals_element["experience_points"], 100)
+        self.assertEqual(maintenance_element["experience_points"], 100)
+        self.assertEqual(chord_element["experience_points"], 50)
+
+    # Existing records with zero XP should be backfilled to category defaults.
+    def test_seed_initial_data_backfills_zero_experience_points(self):
+        self.controller.insert_category("Fundamentals")
+        category = self.controller.get_category_by_name("Fundamentals")
+        category_id = category["category_id"]
+
+        self.controller.insert_element(category_id, "Legacy Lesson", experience_points=0)
+
+        self.controller.seed_initial_data(
+            category_names=["Fundamentals"],
+            fundamentals_lessons=["Legacy Lesson"],
+        )
+
+        lesson = self.controller.get_elements_by_category(category_id)[0]
+        self.assertEqual(lesson["experience_points"], 100)
+
     # Current schema allows duplicate category names, so two inserts make two rows.
     def test_duplicate_category_name_creates_two_rows(self):
         self.controller.insert_category("Fundamentals")

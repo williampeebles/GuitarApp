@@ -17,6 +17,19 @@ class DashboardController:
         elements = self.db.get_elements_by_category(category["category_id"])
         return sum(1 for element in elements if element.get("completed"))
 
+    def _get_completed_xp(self, category_name):
+        """Return total XP from completed elements in a category."""
+        category = self.db.get_category_by_name(category_name)
+        if not category:
+            return 0
+
+        elements = self.db.get_elements_by_category(category["category_id"])
+        return sum(
+            int(element.get("experience_points") or 0)
+            for element in elements
+            if element.get("completed")
+        )
+
     def _get_completed_set(self, category_name):
         category = self.db.get_category_by_name(category_name)
         if not category:
@@ -34,8 +47,11 @@ class DashboardController:
         completed_maintenance = self._get_completed_count("Maintenance")
         mastered_chords = self._get_completed_count("Chords")
 
-        total_lessons = completed_fundamentals + completed_maintenance
-        total_xp = RankSystem.get_total_xp(total_lessons, mastered_chords)
+        total_xp = (
+            self._get_completed_xp("Fundamentals")
+            + self._get_completed_xp("Maintenance")
+            + self._get_completed_xp("Chords")
+        )
         rank_progress = RankSystem.get_rank_progress_from_xp(total_xp)
 
         return {
@@ -60,41 +76,68 @@ class DashboardController:
         )
 
     def get_suggested_sections(self, limit=8):
-        """Return prioritized sections/subsections to work on, lowest completion first."""
+        """Return prioritized section suggestions using fixed per-section quotas.
+
+        Quotas:
+        - Chords: 1 subsection (Beginner -> Intermediate -> Advanced priority)
+        - Fundamentals: up to 3 subsections (lowest completion first)
+        - Maintenance: up to 3 subsections (lowest completion first)
+        """
         breakdown = self.get_progress_breakdown()
-        suggestions = []
+        quotas = {
+            "Chords": 1,
+            "Fundamentals": 3,
+            "Maintenance": 3,
+        }
+        selected_suggestions = []
         chord_difficulty_order = {
             "Beginner Chords": 0,
             "Intermediate Chords": 1,
             "Advanced Chords": 2,
         }
 
+        section_candidates = {
+            "Chords": [],
+            "Fundamentals": [],
+            "Maintenance": [],
+        }
+
         for section in breakdown:
             section_name = section.get("name", "Section")
-            section_percent = float(section.get("percent", 0.0))
+            if section_name not in section_candidates:
+                continue
 
             for subsection in section.get("subsections", []):
                 subsection_name = subsection.get("name", "Subsection")
                 subsection_percent = float(subsection.get("percent", 0.0))
-                if subsection_percent < 100.0:
-                    difficulty_rank = 99
-                    if section_name == "Chords":
-                        difficulty_rank = chord_difficulty_order.get(subsection_name, 99)
-                    suggestions.append({
-                        "name": f"{section_name} • {subsection_name}",
-                        "percent": subsection_percent,
-                        "difficulty_rank": difficulty_rank,
-                    })
+                if subsection_percent >= 100.0:
+                    continue
 
-            if not section.get("subsections") and section_percent < 100.0:
-                suggestions.append({
-                    "name": section_name,
-                    "percent": section_percent,
-                    "difficulty_rank": 99,
+                difficulty_rank = 99
+                if section_name == "Chords":
+                    difficulty_rank = chord_difficulty_order.get(subsection_name, 99)
+
+                section_candidates[section_name].append({
+                    "name": f"{section_name} • {subsection_name}",
+                    "percent": subsection_percent,
+                    "difficulty_rank": difficulty_rank,
                 })
 
-        suggestions.sort(key=lambda item: (item["percent"], item["difficulty_rank"], item["name"]))
-        return suggestions[:limit]
+        section_candidates["Chords"].sort(
+            key=lambda item: (item["difficulty_rank"], item["percent"], item["name"])
+        )
+        section_candidates["Fundamentals"].sort(
+            key=lambda item: (item["percent"], item["name"])
+        )
+        section_candidates["Maintenance"].sort(
+            key=lambda item: (item["percent"], item["name"])
+        )
+
+        for section_name in ("Chords", "Fundamentals", "Maintenance"):
+            take_count = quotas[section_name]
+            selected_suggestions.extend(section_candidates[section_name][:take_count])
+
+        return selected_suggestions[:limit]
 
     def close(self):
         if self.db:

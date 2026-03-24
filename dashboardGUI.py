@@ -172,7 +172,7 @@ class DashboardTab:
         suggestions_list_frame = tk.Frame(suggestions_frame, bg="#000000")
         suggestions_list_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 10))
 
-        suggested_sections = self.controller.get_suggested_sections(limit=6)
+        suggested_sections = self.controller.get_suggested_sections(limit=7)
         if not suggested_sections:
             no_suggestions_label = tk.Label(
                 suggestions_list_frame,

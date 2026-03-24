@@ -7,17 +7,14 @@ from dashboardController import DashboardController
 class TestDashboardController(unittest.TestCase):
     def setUp(self):
         self.db_patcher = patch("dashboardController.DatabaseController")
-        self.total_xp_patcher = patch("dashboardController.RankSystem.get_total_xp")
         self.rank_progress_patcher = patch("dashboardController.RankSystem.get_rank_progress_from_xp")
         self.breakdown_patcher = patch("dashboardController.ProgressBreakdown.build")
 
         self.mock_db_class = self.db_patcher.start()
-        self.mock_total_xp = self.total_xp_patcher.start()
         self.mock_rank_progress = self.rank_progress_patcher.start()
         self.mock_breakdown = self.breakdown_patcher.start()
 
         self.addCleanup(self.db_patcher.stop)
-        self.addCleanup(self.total_xp_patcher.stop)
         self.addCleanup(self.rank_progress_patcher.stop)
         self.addCleanup(self.breakdown_patcher.stop)
 
@@ -26,22 +23,29 @@ class TestDashboardController(unittest.TestCase):
     def create_controller(self):
         return DashboardController()
 
-    def test_get_rank_progress_aggregates_counts_and_rank_data(self):
+    def test_get_rank_progress_aggregates_completed_xp_and_rank_data(self):
         category_map = {
             "Fundamentals": {"category_id": 1},
             "Maintenance": {"category_id": 2},
             "Chords": {"category_id": 3},
         }
         elements_map = {
-            1: [{"completed": 1}, {"completed": 0}, {"completed": True}],
-            2: [{"completed": 1}],
-            3: [{"completed": 1}, {"completed": 1}, {"completed": 0}],
+            1: [
+                {"completed": 1, "experience_points": 100},
+                {"completed": 0, "experience_points": 100},
+                {"completed": True, "experience_points": 100},
+            ],
+            2: [{"completed": 1, "experience_points": 100}],
+            3: [
+                {"completed": 1, "experience_points": 50},
+                {"completed": 1, "experience_points": 50},
+                {"completed": 0, "experience_points": 50},
+            ],
         }
 
         self.mock_db.get_category_by_name.side_effect = lambda name: category_map.get(name)
         self.mock_db.get_elements_by_category.side_effect = lambda category_id: elements_map.get(category_id, [])
 
-        self.mock_total_xp.return_value = 123
         self.mock_rank_progress.return_value = {
             "current_rank": "Novice",
             "next_rank": "Apprentice",
@@ -52,8 +56,7 @@ class TestDashboardController(unittest.TestCase):
         controller = self.create_controller()
         result = controller.get_rank_progress()
 
-        self.mock_total_xp.assert_called_once_with(3, 2)
-        self.mock_rank_progress.assert_called_once_with(123)
+        self.mock_rank_progress.assert_called_once_with(400)
         self.assertEqual(result["completed_fundamentals"], 2)
         self.assertEqual(result["completed_maintenance"], 1)
         self.assertEqual(result["mastered_chords"], 2)
@@ -87,7 +90,7 @@ class TestDashboardController(unittest.TestCase):
         )
         self.assertEqual(result, [{"name": "Fundamentals", "percent": 10.0, "subsections": []}])
 
-    def test_get_suggested_sections_sorts_and_limits_results(self):
+    def test_get_suggested_sections_applies_section_quotas(self):
         controller = self.create_controller()
         controller.get_progress_breakdown = lambda: [
             {
@@ -96,12 +99,28 @@ class TestDashboardController(unittest.TestCase):
                 "subsections": [
                     {"name": "Advanced Chords", "percent": 20.0},
                     {"name": "Beginner Chords", "percent": 20.0},
+                    {"name": "Intermediate Chords", "percent": 10.0},
                 ],
             },
             {
                 "name": "Fundamentals",
                 "percent": 80.0,
-                "subsections": [{"name": "Posture", "percent": 10.0}],
+                "subsections": [
+                    {"name": "Posture", "percent": 30.0},
+                    {"name": "Tuning", "percent": 10.0},
+                    {"name": "Reading Tabs", "percent": 20.0},
+                    {"name": "Rhythm", "percent": 5.0},
+                ],
+            },
+            {
+                "name": "Maintenance",
+                "percent": 60.0,
+                "subsections": [
+                    {"name": "Cleaning", "percent": 50.0},
+                    {"name": "String Changes", "percent": 40.0},
+                    {"name": "Storage", "percent": 70.0},
+                    {"name": "Setup", "percent": 30.0},
+                ],
             },
             {
                 "name": "Songs",
@@ -110,12 +129,28 @@ class TestDashboardController(unittest.TestCase):
             },
         ]
 
-        suggestions = controller.get_suggested_sections(limit=3)
+        suggestions = controller.get_suggested_sections(limit=7)
 
-        self.assertEqual(len(suggestions), 3)
-        self.assertEqual(suggestions[0]["name"], "Fundamentals • Posture")
-        self.assertEqual(suggestions[1]["name"], "Chords • Beginner Chords")
-        self.assertEqual(suggestions[2]["name"], "Chords • Advanced Chords")
+        self.assertEqual(len(suggestions), 7)
+
+        self.assertEqual(suggestions[0]["name"], "Chords • Beginner Chords")
+
+        self.assertEqual(
+            [item["name"] for item in suggestions[1:4]],
+            [
+                "Fundamentals • Rhythm",
+                "Fundamentals • Tuning",
+                "Fundamentals • Reading Tabs",
+            ],
+        )
+        self.assertEqual(
+            [item["name"] for item in suggestions[4:7]],
+            [
+                "Maintenance • Setup",
+                "Maintenance • String Changes",
+                "Maintenance • Cleaning",
+            ],
+        )
 
     def test_close_calls_database_close(self):
         controller = self.create_controller()

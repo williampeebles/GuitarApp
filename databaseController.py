@@ -1,10 +1,17 @@
 import sqlite3
 import json
 from database import Database
+from rankSystem import RankSystem
 
 
 class DatabaseController:
     """Handles all database insert and read operations."""
+
+    DEFAULT_XP_BY_CATEGORY = {
+        "Fundamentals": RankSystem.LESSON_XP,
+        "Maintenance": RankSystem.LESSON_XP,
+        "Chords": RankSystem.CHORD_XP,
+    }
     
     def __init__(self, database_path=None):
         """Initialize controller with optional custom database path."""
@@ -23,8 +30,23 @@ class DatabaseController:
         ''', (name_text, number_of_elements, tutorials_completed, tutorials_left, completion_percentage))
         self.conn.commit()
 
-    def insert_element(self, category_id, element_type, completed=0, experience_points=0):
+    def _get_default_element_xp(self, category_id):
+        """Return default XP for an element based on its category."""
+        self.cursor.execute(
+            'SELECT name_text FROM categories WHERE category_id = ?',
+            (category_id,)
+        )
+        row = self.cursor.fetchone()
+        if not row:
+            return 0
+        category_name = row[0]
+        return self.DEFAULT_XP_BY_CATEGORY.get(category_name, 0)
+
+    def insert_element(self, category_id, element_type, completed=0, experience_points=None):
         """Insert a new element into the database."""
+        if experience_points is None:
+            experience_points = self._get_default_element_xp(category_id)
+
         self.cursor.execute('''
             INSERT INTO categoryElements (category_id, element_type, completed, experience_points)
             VALUES (?, ?, ?, ?)
@@ -160,6 +182,7 @@ class DatabaseController:
             return
         fundamentals_id = fundamentals_category["category_id"]
         existing_elements = self.get_elements_by_category(fundamentals_id)
+        self._backfill_category_element_xp(fundamentals_id, existing_elements)
         existing_names = {elem["element_type"] for elem in existing_elements}
         for lesson_name in fundamentals_lessons:
             if lesson_name not in existing_names:
@@ -173,6 +196,7 @@ class DatabaseController:
             return
         maintenance_id = maintenance_category["category_id"]
         existing_elements = self.get_elements_by_category(maintenance_id)
+        self._backfill_category_element_xp(maintenance_id, existing_elements)
         existing_names = {elem["element_type"] for elem in existing_elements}
         for lesson_name in maintenance_lessons:
             if lesson_name not in existing_names:
@@ -186,11 +210,32 @@ class DatabaseController:
             return
         chords_id = chords_category["category_id"]
         existing_elements = self.get_elements_by_category(chords_id)
+        self._backfill_category_element_xp(chords_id, existing_elements)
         existing_names = {elem["element_type"] for elem in existing_elements}
         for chord_name in chord_names:
             if chord_name not in existing_names:
                 self.insert_element(chords_id, chord_name)
         self.update_category_progress(chords_id)
+
+    def _backfill_category_element_xp(self, category_id, elements):
+        """Ensure older elements have XP values set based on category defaults."""
+        default_xp = self._get_default_element_xp(category_id)
+        if default_xp <= 0:
+            return
+
+        missing_xp_ids = [
+            element["element_id"]
+            for element in elements
+            if int(element.get("experience_points") or 0) <= 0
+        ]
+        if not missing_xp_ids:
+            return
+
+        self.cursor.executemany(
+            'UPDATE categoryElements SET experience_points = ? WHERE element_id = ?',
+            [(default_xp, element_id) for element_id in missing_xp_ids],
+        )
+        self.conn.commit()
 
     def _seed_quiz_bank(self, quiz_bank_by_lesson, quiz_bank_by_topic, extra_quiz_questions):
         """Insert all quiz questions that do not already exist in the testBank table."""
