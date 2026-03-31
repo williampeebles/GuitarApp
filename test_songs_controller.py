@@ -24,6 +24,29 @@ class TestSongsController(unittest.TestCase):
 
         mock_open_new.assert_called_once_with(url)
 
+    def test_add_song_tutorial_appends_song(self):
+        original_count = len(self.controller.get_song_tutorials())
+
+        result = self.controller.add_song_tutorial(
+            song_name="My Song",
+            author_name="Test Artist",
+            url="https://example.com/my-song",
+        )
+
+        self.assertTrue(result["success"])
+        self.assertEqual(len(self.controller.get_song_tutorials()), original_count + 1)
+        self.assertEqual(self.controller.get_song_tutorials()[-1], ("My Song - Test Artist", "https://example.com/my-song"))
+
+    def test_add_song_tutorial_rejects_invalid_url(self):
+        result = self.controller.add_song_tutorial(
+            song_name="My Song",
+            author_name="Test Artist",
+            url="example.com/no-scheme",
+        )
+
+        self.assertFalse(result["success"])
+        self.assertIn("valid URL", result["message"])
+
 
 if __name__ == "__main__":
     unittest.main()
