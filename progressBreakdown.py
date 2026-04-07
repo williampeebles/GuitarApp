@@ -13,7 +13,7 @@ class ProgressBreakdown:
         return round((completed * 100.0) / total, 1)
 
     @classmethod
-    def build(cls, fundamentals_completed, chords_completed, maintenance_completed, songs_percent=0.0):
+    def build(cls, fundamentals_completed, chords_completed, maintenance_completed):
         breakdown = []
 
         fundamentals_total = sum(len(items) for items in FundamentalsContent.LESSON_ITEMS_BY_TOPIC.values())
@@ -60,12 +60,6 @@ class ProgressBreakdown:
             "name": "Maintenance",
             "percent": cls._percentage(len(maintenance_completed), maintenance_total),
             "subsections": maintenance_subsections,
-        })
-
-        breakdown.append({
-            "name": "Songs",
-            "percent": float(songs_percent),
-            "subsections": [],
         })
 
         return breakdown

@@ -176,3 +176,7 @@ class SongsTab:
             self.name_entry.delete(0, tk.END)
             self.author_entry.delete(0, tk.END)
             self.url_entry.delete(0, tk.END)
+
+    def close(self):
+        if self.controller:
+            self.controller.close()

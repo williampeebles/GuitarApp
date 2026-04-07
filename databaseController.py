@@ -61,6 +61,47 @@ class DatabaseController:
         ''', (source_type, source_name, question_text, json.dumps(choices), answer_index))
         self.conn.commit()
 
+    def insert_song_tutorial(self, title_text, url_text, artist_name=""):
+        """Insert a song tutorial entry if it does not already exist."""
+        self.cursor.execute(
+            '''
+            INSERT OR IGNORE INTO songTutorials (title_text, artist_name, url_text)
+            VALUES (?, ?, ?)
+            ''',
+            (title_text, artist_name, url_text),
+        )
+        self.conn.commit()
+
+    def get_song_tutorials(self):
+        """Retrieve all persisted song tutorial entries."""
+        self.cursor.execute(
+            '''
+            SELECT title_text, artist_name, url_text
+            FROM songTutorials
+            ORDER BY song_id
+            '''
+        )
+        rows = self.cursor.fetchall()
+        return [
+            {
+                "title_text": row["title_text"],
+                "artist_name": row["artist_name"],
+                "url_text": row["url_text"],
+            }
+            for row in rows
+        ]
+
+    def delete_song_tutorial(self, title_text, url_text):
+        """Delete a specific persisted song tutorial entry."""
+        self.cursor.execute(
+            '''
+            DELETE FROM songTutorials
+            WHERE title_text = ? AND url_text = ?
+            ''',
+            (title_text, url_text),
+        )
+        self.conn.commit()
+
     # READ OPERATIONS
     
     def get_all_categories(self):
@@ -157,6 +198,7 @@ class DatabaseController:
         extra_quiz_questions=None,
     ):
         """Seed the database with all initial data on first launch."""
+        self._remove_legacy_songs_category()
         self._seed_categories(category_names or ())
         self._seed_fundamentals_lessons(fundamentals_lessons or ())
         self._seed_maintenance_lessons(maintenance_lessons or ())
@@ -166,6 +208,23 @@ class DatabaseController:
             quiz_bank_by_topic or {},
             extra_quiz_questions or [],
         )
+
+    def _remove_legacy_songs_category(self):
+        """Remove the old Songs category row and any linked elements."""
+        songs_category = self.get_category_by_name("Songs")
+        if not songs_category:
+            return
+
+        songs_id = songs_category["category_id"]
+        self.cursor.execute(
+            'DELETE FROM categoryElements WHERE category_id = ?',
+            (songs_id,),
+        )
+        self.cursor.execute(
+            'DELETE FROM categories WHERE category_id = ?',
+            (songs_id,),
+        )
+        self.conn.commit()
 
     def _seed_categories(self, category_names):
         """Insert any category that does not already exist in the database."""

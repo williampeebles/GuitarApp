@@ -65,14 +65,11 @@ class DashboardController:
         fundamentals_completed = self._get_completed_set("Fundamentals")
         chords_completed = self._get_completed_set("Chords")
         maintenance_completed = self._get_completed_set("Maintenance")
-        songs_category = self.db.get_category_by_name("Songs")
-        songs_percent = songs_category.get("completion_percentage", 0.0) if songs_category else 0.0
 
         return ProgressBreakdown.build(
             fundamentals_completed=fundamentals_completed,
             chords_completed=chords_completed,
             maintenance_completed=maintenance_completed,
-            songs_percent=songs_percent,
         )
 
     def get_suggested_sections(self, limit=8):

@@ -62,12 +62,11 @@ class TestDashboardController(unittest.TestCase):
         self.assertEqual(result["mastered_chords"], 2)
         self.assertEqual(result["current_rank"], "Novice")
 
-    def test_get_progress_breakdown_passes_completed_sets_and_songs_percent(self):
+    def test_get_progress_breakdown_passes_completed_sets(self):
         category_map = {
             "Fundamentals": {"category_id": 10},
             "Chords": {"category_id": 20},
             "Maintenance": {"category_id": 30},
-            "Songs": {"category_id": 40, "completion_percentage": 33.3},
         }
         elements_map = {
             10: [{"element_type": "F1", "completed": 1}, {"element_type": "F2", "completed": 0}],
@@ -86,7 +85,6 @@ class TestDashboardController(unittest.TestCase):
             fundamentals_completed={"F1"},
             chords_completed={"A", "B"},
             maintenance_completed={"M2"},
-            songs_percent=33.3,
         )
         self.assertEqual(result, [{"name": "Fundamentals", "percent": 10.0, "subsections": []}])
 

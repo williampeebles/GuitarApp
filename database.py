@@ -50,6 +50,25 @@ class Database:
                 UNIQUE(source_type, source_name, question_text)
             )
         ''')
+
+        # Create songTutorials table for persisted songs tab entries
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS songTutorials (
+                song_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title_text TEXT NOT NULL,
+                artist_name TEXT NOT NULL DEFAULT '',
+                url_text TEXT NOT NULL,
+                UNIQUE(title_text, artist_name, url_text)
+            )
+        ''')
+
+        # Lightweight migration: add artist_name column for older databases.
+        self.cursor.execute("PRAGMA table_info(songTutorials)")
+        columns = {row[1] for row in self.cursor.fetchall()}
+        if "artist_name" not in columns:
+            self.cursor.execute(
+                "ALTER TABLE songTutorials ADD COLUMN artist_name TEXT NOT NULL DEFAULT ''"
+            )
         
         self.conn.commit()
     

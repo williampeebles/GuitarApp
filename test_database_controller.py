@@ -95,19 +95,19 @@ class TestDatabaseController(unittest.TestCase):
     # Seeding twice should only add new lessons and keep existing ones.
     def test_seed_initial_data_adds_only_missing_items(self):
         self.controller.seed_initial_data(
-            category_names=["Fundamentals", "Songs"],
+            category_names=["Fundamentals"],
             fundamentals_lessons=["Lesson A", "Lesson B"],
         )
 
         self.controller.seed_initial_data(
-            category_names=["Fundamentals", "Songs"],
+            category_names=["Fundamentals"],
             fundamentals_lessons=["Lesson A", "Lesson B", "Lesson C"],
         )
 
         fundamentals = self.controller.get_category_by_name("Fundamentals")
         self.assertIsNotNone(fundamentals)
         songs = self.controller.get_category_by_name("Songs")
-        self.assertIsNotNone(songs)
+        self.assertIsNone(songs)
 
         lessons = self.controller.get_elements_by_category(fundamentals["category_id"])
         lesson_names = {lesson["element_type"] for lesson in lessons}

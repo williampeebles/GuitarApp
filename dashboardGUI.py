@@ -80,13 +80,13 @@ class DashboardTab:
             bd=2,
             width=500,
         )
-        progress_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=(10, 5), pady=10, expand=False)
+        progress_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=(10, 5), pady=10, expand=True)
         progress_frame.pack_propagate(False)
 
         progress_label = tk.Label(
             progress_frame,
             text="Progress",
-            font=("Arial", 14),
+            font=("Arial", 18, "bold"),
             bg="#000000",
             fg="white",
         )
@@ -97,13 +97,14 @@ class DashboardTab:
 
         progress_breakdown = self.controller.get_progress_breakdown()
         for section in progress_breakdown:
-            section_row = tk.Frame(progress_breakdown_container, bg="#000000")
-            section_row.pack(fill=tk.X, pady=(4, 0))
+            section_row = tk.Frame(progress_breakdown_container, bg="#000000", height=35)
+            section_row.pack(fill=tk.X, pady=(8, 2))
+            section_row.pack_propagate(False)
 
             section_label = tk.Label(
                 section_row,
                 text=f"{section['name']}: {section['percent']:.1f}%",
-                font=("Arial", 11, "bold"),
+                font=("Arial", 13, "bold"),
                 bg="#000000",
                 fg="white",
                 anchor="w",
@@ -115,19 +116,20 @@ class DashboardTab:
                 section_row,
                 orient=tk.HORIZONTAL,
                 mode="determinate",
-                length=300,
+                length=420,
             )
             section_progress["value"] = section["percent"]
             section_progress.pack(side=tk.RIGHT, padx=(8, 0))
 
             for subsection in section.get("subsections", []):
-                subsection_row = tk.Frame(progress_breakdown_container, bg="#000000")
-                subsection_row.pack(fill=tk.X)
+                subsection_row = tk.Frame(progress_breakdown_container, bg="#000000", height=28)
+                subsection_row.pack(fill=tk.X, pady=(4, 0))
+                subsection_row.pack_propagate(False)
 
                 subsection_label = tk.Label(
                     subsection_row,
                     text=f"  • {subsection['name']}: {subsection['percent']:.1f}%",
-                    font=("Arial", 10),
+                    font=("Arial", 12),
                     bg="#000000",
                     fg="#d9d9d9",
                     anchor="w",
@@ -140,16 +142,16 @@ class DashboardTab:
                     subsection_row,
                     orient=tk.HORIZONTAL,
                     mode="determinate",
-                    length=260,
+                    length=360,
                 )
                 subsection_progress["value"] = subsection["percent"]
                 subsection_progress.pack(side=tk.RIGHT, padx=(8, 0))
 
-        # Right side container for suggestions and achievements
+        # Right side container for suggestions
         right_container = tk.Frame(self.frame, bg="#f5f5f5")
         right_container.pack(side=tk.RIGHT, fill=tk.BOTH, padx=(5, 10), pady=10, expand=False)
 
-        # Suggestions frame on top
+        # Suggestions frame
         suggestions_frame = tk.Frame(
             right_container,
             bg="#000000",
@@ -157,13 +159,13 @@ class DashboardTab:
             bd=2,
             width=400,
         )
-        suggestions_frame.pack(side=tk.TOP, fill=tk.BOTH, pady=(0, 5), expand=True)
+        suggestions_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         suggestions_frame.pack_propagate(False)
 
         suggestions_label = tk.Label(
             suggestions_frame,
             text="Suggestions",
-            font=("Arial", 14),
+            font=("Arial", 18, "bold"),
             bg="#000000",
             fg="white",
         )
@@ -177,7 +179,7 @@ class DashboardTab:
             no_suggestions_label = tk.Label(
                 suggestions_list_frame,
                 text="All tracked sections are complete.",
-                font=("Arial", 10),
+                font=("Arial", 12),
                 bg="#000000",
                 fg="#d9d9d9",
                 anchor="w",
@@ -189,7 +191,7 @@ class DashboardTab:
                 suggestion_item_label = tk.Label(
                     suggestions_list_frame,
                     text=f"• {item['name']} ({item['percent']:.1f}%)",
-                    font=("Arial", 10),
+                    font=("Arial", 12),
                     bg="#000000",
                     fg="#d9d9d9",
                     anchor="w",
@@ -197,43 +199,6 @@ class DashboardTab:
                     wraplength=360,
                 )
                 suggestion_item_label.pack(fill=tk.X, pady=(0, 3))
-
-        # Achievements frame on bottom
-        achievements_frame = tk.Frame(
-            right_container,
-            bg="#000000",
-            relief=tk.SUNKEN,
-            bd=2,
-            width=400,
-        )
-        achievements_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        achievements_frame.pack_propagate(False)
-
-        achievements_label = tk.Label(
-            achievements_frame,
-            text="Achievements",
-            font=("Arial", 14),
-            bg="#000000",
-            fg="white",
-        )
-        achievements_label.pack(pady=10)
-
-        # Center content area
-        content_frame = tk.Frame(
-            self.frame,
-            bg="#ffffff",
-            relief=tk.RIDGE,
-            bd=2,
-        )
-        content_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=5, pady=10)
-
-        dashboard_title = tk.Label(
-            content_frame,
-            text="Dashboard",
-            font=("Arial", 24),
-            bg="#ffffff",
-        )
-        dashboard_title.pack(pady=20, padx=20)
 
     def close(self):
         if self.controller:

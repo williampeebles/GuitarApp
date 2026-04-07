@@ -6,7 +6,7 @@ from chordsGUI import ChordsTab
 from songsGUI import SongsTab
 from maintenanceGUI import MaintenanceTab
 
-DEFAULT_CATEGORIES = ("Fundamentals", "Chords", "Songs", "Maintenance")
+DEFAULT_CATEGORIES = ("Fundamentals", "Chords", "Maintenance")
 
 
 class TabController:
@@ -90,6 +90,8 @@ class TabController:
         """Close all tabs and their resources."""
         if self.dashboard_tab:
             self.dashboard_tab.close()
+        if self.songs_tab:
+            self.songs_tab.close()
         if self.chords_tab:
             self.chords_tab.close()
         if self.fundamentals_tab:
