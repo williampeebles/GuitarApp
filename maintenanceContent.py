@@ -278,7 +278,332 @@ class MaintenanceContent:
         ],
     }
 
-    QUIZ_BANK_BY_LESSON = {}
+    QUIZ_BANK_BY_LESSON = {
+        "Lesson 1: Daily Cleaning Basics": [
+            {
+                "question": "What cloth is best for daily wipe-downs?",
+                "choices": ["A clean microfiber cloth", "A rough towel", "Paper napkins", "Steel wool"],
+                "answer": 0,
+            },
+            {
+                "question": "How long should a typical post-practice wipe take?",
+                "choices": ["About 30-60 seconds", "10-15 minutes", "Only once a week", "No wiping is needed"],
+                "answer": 0,
+            },
+            {
+                "question": "Which area should be included in daily cleaning?",
+                "choices": ["Body, neck, and strings", "Only the headstock", "Only the pickups", "Only the bridge pins"],
+                "answer": 0,
+            },
+            {
+                "question": "Why is daily cleaning recommended in this lesson?",
+                "choices": ["It reduces grime and protects the finish", "It changes your tuning", "It raises action height", "It improves pickup output"],
+                "answer": 0,
+            },
+            {
+                "question": "Which product should you avoid for routine cleaning?",
+                "choices": ["Household glass spray", "A dry microfiber cloth", "A guitar-safe polishing cloth", "A soft lint-free rag"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 2: Safe Storage and Humidity": [
+            {
+                "question": "What humidity range is generally recommended for guitars?",
+                "choices": ["45%-55%", "5%-15%", "70%-90%", "0%-5%"],
+                "answer": 0,
+            },
+            {
+                "question": "Which place is unsafe for long-term guitar storage?",
+                "choices": ["A hot car trunk", "A stable room", "A hard case indoors", "A dry closet"],
+                "answer": 0,
+            },
+            {
+                "question": "What tool helps monitor room humidity?",
+                "choices": ["A hygrometer", "A capo", "A tuner pedal", "A metronome"],
+                "answer": 0,
+            },
+            {
+                "question": "Why is a case useful in changing weather?",
+                "choices": ["It buffers fast temperature and humidity swings", "It lowers string gauge", "It tunes the guitar", "It changes neck profile"],
+                "answer": 0,
+            },
+            {
+                "question": "Where should you avoid placing your guitar indoors?",
+                "choices": ["Near vents and heaters", "On a stand in mild conditions", "Inside a case", "In a climate-stable room"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 3: Fingerboard Conditioning": [
+            {
+                "question": "When is fingerboard conditioning usually done?",
+                "choices": ["During string changes", "Before every song", "Daily after practice", "Only when tuning"],
+                "answer": 0,
+            },
+            {
+                "question": "How should conditioner be applied?",
+                "choices": ["A small amount on a cloth first", "Poured directly onto the board", "Sprayed on pickups", "Mixed with water"],
+                "answer": 0,
+            },
+            {
+                "question": "What is the key rule about amount used?",
+                "choices": ["Use it lightly and occasionally", "Soak the board heavily", "Apply until dripping", "Use every day"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you do after brief conditioning time?",
+                "choices": ["Buff off all excess", "Leave residue overnight", "Rinse with water", "Heat with a dryer"],
+                "answer": 0,
+            },
+            {
+                "question": "Which board type needs extra caution before conditioning?",
+                "choices": ["Finished maple boards", "Unfinished rosewood boards", "Ebony boards", "All unfinished boards"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 4: Hardware Check Routine": [
+            {
+                "question": "How often does this lesson suggest checking hardware?",
+                "choices": ["About monthly", "Every 3 years", "Only when strings break", "Never"],
+                "answer": 0,
+            },
+            {
+                "question": "Which parts are part of the quick hardware check?",
+                "choices": ["Tuners, strap buttons, bridge parts, and screws", "Only strings", "Only pickups", "Only frets"],
+                "answer": 0,
+            },
+            {
+                "question": "How tight should screws and nuts be adjusted?",
+                "choices": ["Just until snug", "As tight as possible", "Left loose", "Tightened with power tools"],
+                "answer": 0,
+            },
+            {
+                "question": "Why use the correct screwdriver size?",
+                "choices": ["To avoid stripping screw heads", "To increase volume", "To alter intonation", "To polish frets"],
+                "answer": 0,
+            },
+            {
+                "question": "What is a risk of ignoring loose strap buttons?",
+                "choices": ["Dropping the guitar", "Changing pickup phase", "Lowering action", "Muting open strings"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 1: Wiping Strings After Practice": [
+            {
+                "question": "What does string wiping remove after playing?",
+                "choices": ["Oils and moisture", "Fret markers", "Bridge saddles", "Tuning pegs"],
+                "answer": 0,
+            },
+            {
+                "question": "How should the cloth contact each string?",
+                "choices": ["Under and over each string", "Only above strings", "Only at open-string area", "Only near the nut"],
+                "answer": 0,
+            },
+            {
+                "question": "Which area deserves extra attention for sweat buildup?",
+                "choices": ["Near the bridge", "Behind tuning pegs", "Inside sound hole label", "On fret markers"],
+                "answer": 0,
+            },
+            {
+                "question": "What hand habit supports longer string life?",
+                "choices": ["Wash and dry hands before practice", "Use lotion right before playing", "Skip hand cleaning", "Wet fingers while playing"],
+                "answer": 0,
+            },
+            {
+                "question": "What should be avoided while wiping strings?",
+                "choices": ["Abrasive pads and aggressive scrubbing", "Soft cloth pressure", "Consistent routine", "Gentle pinching with cloth"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 2: Knowing When to Change Strings": [
+            {
+                "question": "Which symptom suggests strings should be replaced?",
+                "choices": ["Dull tone and tuning instability", "A new pick sound", "Shiny fret wire", "Clean fretboard"],
+                "answer": 0,
+            },
+            {
+                "question": "What visual sign can indicate old strings?",
+                "choices": ["Discoloration or rust", "Brighter inlays", "New saddle shape", "Smaller tuners"],
+                "answer": 0,
+            },
+            {
+                "question": "What planning habit is recommended in this lesson?",
+                "choices": ["Keep a log of string change dates", "Change strings randomly", "Never note maintenance", "Only change when one snaps"],
+                "answer": 0,
+            },
+            {
+                "question": "When should many players change strings early?",
+                "choices": ["Before performances or recordings", "After buying picks", "After cleaning frets", "Before adjusting strap height"],
+                "answer": 0,
+            },
+            {
+                "question": "Which practice is discouraged in this lesson?",
+                "choices": ["Waiting for breakage before replacing", "Monitoring rough feel", "Checking tuning stability", "Replacing when tone declines"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 3: Proper String Changing Steps": [
+            {
+                "question": "What approach helps keep neck tension more stable?",
+                "choices": ["Change one string at a time", "Remove all strings for days", "Tune randomly after install", "Skip winding technique"],
+                "answer": 0,
+            },
+            {
+                "question": "How many tuner wraps are usually recommended?",
+                "choices": ["About 2-3 wraps", "8-10 wraps", "No wraps", "Exactly 1/2 wrap"],
+                "answer": 0,
+            },
+            {
+                "question": "How should wraps travel on the tuning post?",
+                "choices": ["Neatly downward", "Crossed in random layers", "Upward only", "Alternating up and down"],
+                "answer": 0,
+            },
+            {
+                "question": "What should be done after installing new strings?",
+                "choices": ["Gently stretch and retune several times", "Never retune", "Detune permanently", "Immediately adjust truss rod"],
+                "answer": 0,
+            },
+            {
+                "question": "Which safety step is part of this lesson?",
+                "choices": ["Trim excess string ends", "Leave long sharp ends", "Use bare hands to snap ends", "Ignore protruding ends"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 4: Extending String Life": [
+            {
+                "question": "Which daily habit most helps extend string life?",
+                "choices": ["Wash hands before playing", "Store near humidifier only", "Play with wet hands", "Skip post-play cleaning"],
+                "answer": 0,
+            },
+            {
+                "question": "What storage habit helps reduce oxidation?",
+                "choices": ["Keep the guitar in a case when not in use", "Leave it uncovered in dusty air", "Store by open windows", "Keep by heaters"],
+                "answer": 0,
+            },
+            {
+                "question": "What accessory should stay in your bag for consistency?",
+                "choices": ["Cloth and spare strings", "Only extra straps", "Only battery-powered pedals", "Only capo"],
+                "answer": 0,
+            },
+            {
+                "question": "What type of strings might help with acidic hands?",
+                "choices": ["Coated strings", "Rusty strings", "Used strings", "Any broken string"],
+                "answer": 0,
+            },
+            {
+                "question": "What early sign should not be ignored?",
+                "choices": ["Small rust spots", "Shiny picks", "Bright inlays", "A clean cloth"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 1: Standard Tuning Process": [
+            {
+                "question": "In standard tuning, what order is recommended in this lesson?",
+                "choices": ["Low E to high E", "High E to low E only", "Random string order", "Only tune middle strings"],
+                "answer": 0,
+            },
+            {
+                "question": "For better stability, you should tune:",
+                "choices": ["Up to pitch", "Down below pitch only", "Without checking target", "Once and never recheck"],
+                "answer": 0,
+            },
+            {
+                "question": "Why recheck all strings after one full pass?",
+                "choices": ["String tension shifts across the neck", "Picks wear out quickly", "It changes fret material", "It brightens wood grain"],
+                "answer": 0,
+            },
+            {
+                "question": "What improves tuner reading accuracy?",
+                "choices": ["Muting other strings while tuning", "Strumming all strings loudly", "Using random pick attack", "Holding the guitar against a wall"],
+                "answer": 0,
+            },
+            {
+                "question": "What should beginners avoid according to this lesson?",
+                "choices": ["Relying only on ear before ear training develops", "Using a tuner", "Checking twice", "Tuning slowly"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 2: Intonation Basics": [
+            {
+                "question": "What two notes are compared in a basic intonation check?",
+                "choices": ["12th-fret harmonic and fretted note", "Open string and 3rd fret", "5th fret and 7th fret only", "Any two random frets"],
+                "answer": 0,
+            },
+            {
+                "question": "If those two notes do not match, what may need adjustment?",
+                "choices": ["Saddle position", "Pick thickness", "Strap length", "Neck inlay"],
+                "answer": 0,
+            },
+            {
+                "question": "How should intonation adjustments be made?",
+                "choices": ["In very small increments", "In large jumps", "All saddles at once", "Without retuning"],
+                "answer": 0,
+            },
+            {
+                "question": "What must be done after each saddle adjustment?",
+                "choices": ["Retune before rechecking", "Replace all strings", "Lower action immediately", "Wait a week"],
+                "answer": 0,
+            },
+            {
+                "question": "What string condition is best for judging intonation?",
+                "choices": ["Fresh strings", "Dead strings", "Partly broken strings", "Unwound strings only"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 3: Action Height and Comfort": [
+            {
+                "question": "What does higher action generally do?",
+                "choices": ["Reduces buzz but feels stiffer", "Makes fretting easier than ever", "Removes all tension", "Retunes the guitar"],
+                "answer": 0,
+            },
+            {
+                "question": "What can happen if action is set too low?",
+                "choices": ["Fret buzz may increase", "Strings become thicker", "Tuners loosen instantly", "Frets move position"],
+                "answer": 0,
+            },
+            {
+                "question": "How should action changes be tested?",
+                "choices": ["With your normal playing dynamics", "Only by looking at ruler marks", "Without touching the guitar", "Only with harmonics"],
+                "answer": 0,
+            },
+            {
+                "question": "What pace of adjustment is recommended?",
+                "choices": ["Small increments over time", "Large aggressive shifts", "Daily full reset", "One extreme setting forever"],
+                "answer": 0,
+            },
+            {
+                "question": "What is discouraged in this lesson?",
+                "choices": ["Chasing ultra-low action with constant buzz", "Balancing comfort and clean notes", "Testing across the neck", "Considering playing style"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 4: Quick Pre-Practice Setup Check": [
+            {
+                "question": "How long is the recommended pre-practice setup check?",
+                "choices": ["About one minute", "15 minutes", "30 minutes", "No check needed"],
+                "answer": 0,
+            },
+            {
+                "question": "Which three checks are core in this lesson?",
+                "choices": ["Tuning, string condition, and obvious hardware issues", "Only chord chart review", "Only metronome speed", "Only pick brand"],
+                "answer": 0,
+            },
+            {
+                "question": "Why keep tuner, picks, and cloth in one place?",
+                "choices": ["It makes setup checks faster and consistent", "It changes your tone", "It lowers neck relief", "It replaces maintenance"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you do with a small issue found before practice?",
+                "choices": ["Address it immediately", "Ignore it until next month", "Start intense practice first", "Remove all hardware"],
+                "answer": 0,
+            },
+            {
+                "question": "What is discouraged when you are in a hurry?",
+                "choices": ["Skipping the quick check", "Following the same checklist", "Retuning briefly", "Inspecting strings"],
+                "answer": 0,
+            },
+        ],
+    }
 
     EXTRA_QUIZ_QUESTIONS = [
         {

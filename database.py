@@ -38,18 +38,8 @@ class Database:
             )
         ''')
 
-        # Create testBank table for quiz questions
-        self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS testBank (
-                question_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                source_type TEXT NOT NULL,
-                source_name TEXT NOT NULL,
-                question_text TEXT NOT NULL,
-                choices_json TEXT NOT NULL,
-                answer_index INTEGER NOT NULL,
-                UNIQUE(source_type, source_name, question_text)
-            )
-        ''')
+        # Remove legacy quiz bank table (questions now live in content files).
+        self.cursor.execute('DROP TABLE IF EXISTS testBank')
 
         # Create songTutorials table for persisted songs tab entries
         self.cursor.execute('''

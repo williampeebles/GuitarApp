@@ -13,17 +13,31 @@ class DashboardTab:
     def __init__(self, parent):
         self.frame = tk.Frame(parent, bg="#f5f5f5")
         self.controller = DashboardController()
+        self.background_source = None
+        self.background_image = None
+        self.background_label = None
         self._build_layout()
 
     def _build_layout(self):
         # Add background image
         IMAGE_PATH = 'wooden_bg.jpg'
-        WIDTH, HEIGHT = 1500, 800
-        bg_image = Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.LANCZOS)
-        img = ImageTk.PhotoImage(bg_image)
-        lbl = tk.Label(self.frame, image=img)
-        lbl.img = img  # Keep a reference in case this code put is in a function.
-        lbl.place(relx=0.5, rely=0.5, anchor='center')  # Place label in center of parent.
+        self.background_source = Image.open(IMAGE_PATH)
+        initial_bg = self.background_source.resize((1500, 800), Image.LANCZOS)
+        self.background_image = ImageTk.PhotoImage(initial_bg)
+        self.background_label = tk.Label(self.frame, image=self.background_image)
+        self.background_label.img = self.background_image
+        self.background_label.place(relx=0.5, rely=0.5, anchor='center')
+
+        def _resize_background(_event=None):
+            width = max(self.frame.winfo_width(), 1)
+            height = max(self.frame.winfo_height(), 1)
+            resized = self.background_source.resize((width, height), Image.LANCZOS)
+            self.background_image = ImageTk.PhotoImage(resized)
+            self.background_label.configure(image=self.background_image)
+            self.background_label.img = self.background_image
+
+        self.frame.bind("<Configure>", _resize_background, add="+")
+        self.frame.after(0, _resize_background)
 
         progress_bar_container = tk.Frame(self.frame, height=70)
         progress_bar_container.pack(side=tk.TOP, fill=tk.X, padx=10, pady=(10, 0))
@@ -32,9 +46,11 @@ class DashboardTab:
         progress_canvas = tk.Canvas(progress_bar_container, height=70, highlightthickness=0, bd=0)
         progress_canvas.pack(fill=tk.BOTH, expand=True)
 
-        progress_strip = ImageTk.PhotoImage(bg_image.crop((0, 0, WIDTH, 70)))
+        strip_height = min(70, self.background_source.height)
+        progress_strip_source = self.background_source.crop((0, 0, self.background_source.width, strip_height))
+        progress_strip = ImageTk.PhotoImage(progress_strip_source.resize((1500, 70), Image.LANCZOS))
         progress_canvas.progress_strip = progress_strip
-        progress_canvas.create_image(0, 0, image=progress_strip, anchor="nw")
+        progress_strip_id = progress_canvas.create_image(0, 0, image=progress_strip, anchor="nw")
 
         rank_progress = self.controller.get_rank_progress()
 
@@ -65,6 +81,10 @@ class DashboardTab:
         )
 
         def _center_progress_widgets(event):
+            if event.width > 1 and event.height > 1:
+                resized_strip = progress_strip_source.resize((event.width, event.height), Image.LANCZOS)
+                progress_canvas.progress_strip = ImageTk.PhotoImage(resized_strip)
+                progress_canvas.itemconfig(progress_strip_id, image=progress_canvas.progress_strip)
             center_x = event.width / 2
             progress_canvas.coords(level_text_id, center_x, 10)
             progress_canvas.coords(progress_window_id, center_x, 34)

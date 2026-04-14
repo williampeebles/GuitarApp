@@ -20,26 +20,15 @@ class SongsTab:
     def _build_layout(self):
         self.background_manager.apply()
 
-        songs_label = tk.Label(
-            self.frame,
-            text=self.controller.get_tab_title(),
-            font=("Arial", 24),
-            bg="#f5f5f5",
-            fg="black",
-        )
-        songs_label.pack(pady=(20, 10), padx=20)
+        self.frame.grid_rowconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(0, weight=2)
+        self.frame.grid_columnconfigure(1, weight=3)
 
-        content_container = tk.Frame(self.frame, bg="#f5f5f5")
-        content_container.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 20))
-        content_container.grid_rowconfigure(0, weight=1)
-        content_container.grid_columnconfigure(0, weight=2)
-        content_container.grid_columnconfigure(1, weight=3)
+        left_frame = tk.Frame(self.frame, bg="white", relief=tk.SUNKEN, bd=1)
+        left_frame.grid(row=0, column=0, sticky="nsew", padx=(20, 10), pady=20)
 
-        left_frame = tk.Frame(content_container, bg="white", relief=tk.SUNKEN, bd=1)
-        left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
-
-        right_frame = tk.Frame(content_container, bg="white", relief=tk.SUNKEN, bd=1)
-        right_frame.grid(row=0, column=1, sticky="nsew", padx=(10, 0))
+        right_frame = tk.Frame(self.frame, bg="white", relief=tk.SUNKEN, bd=1)
+        right_frame.grid(row=0, column=1, sticky="nsew", padx=(10, 20), pady=20)
 
         songs_title = tk.Label(
             left_frame,

@@ -8,12 +8,6 @@ class SongsController:
 
     def __init__(self, database_path=None):
         self.db = DatabaseController(database_path)
-        self._remove_legacy_preloaded_songs()
-
-    def _remove_legacy_preloaded_songs(self):
-        """Remove legacy preloaded songs so the list starts user-defined only."""
-        for title, url in SongsContent.LEGACY_PRELOADED_SONG_TUTORIALS:
-            self.db.delete_song_tutorial(title, url)
 
     def get_background_image_path(self):
         return SongsContent.BACKGROUND_IMAGE_PATH

@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from fundamentalsController import FundamentalsController
+from fundamentalsContent import FundamentalsContent
 
 
 class TestFundamentalsController(unittest.TestCase):
@@ -49,8 +50,8 @@ class TestFundamentalsController(unittest.TestCase):
         self.assertIn("Content for Lesson That Does Not Exist", content)
         self.assertIn("will be added soon", content)
 
-    # Quiz generator should add extra questions when lesson/topic source has fewer than five.
-    def test_get_quiz_questions_adds_extra_when_topic_has_too_few(self):
+    # Quiz generator should be lesson-specific and not fall back to topic questions.
+    def test_get_quiz_questions_does_not_fall_back_to_topic_questions(self):
         controller = self.create_controller()
         controller.quiz_bank_by_lesson = {}
         controller.quiz_bank_by_topic = {
@@ -62,9 +63,14 @@ class TestFundamentalsController(unittest.TestCase):
 
         questions = controller.get_quiz_questions("Any Lesson", "Tiny Topic")
 
-        self.assertEqual(len(questions), 4)
-        self.assertEqual(questions[0]["question"], "Q1")
-        self.assertEqual(questions[1]["question"], "Q2")
+        self.assertEqual(questions, [])
+
+    # Every listed fundamentals lesson should have a dedicated 5-question quiz bank.
+    def test_all_fundamentals_lessons_have_five_lesson_specific_questions(self):
+        for lesson_name in FundamentalsContent.FUNDAMENTALS_LESSONS:
+            quiz = FundamentalsContent.QUIZ_BANK_BY_LESSON.get(lesson_name)
+            self.assertIsNotNone(quiz, msg=f"Missing quiz for lesson: {lesson_name}")
+            self.assertEqual(len(quiz), 5, msg=f"Expected 5 questions for lesson: {lesson_name}")
 
     # Quiz questions should come from the selected lesson when lesson-specific bank exists.
     def test_get_quiz_questions_prioritizes_lesson_specific_questions(self):

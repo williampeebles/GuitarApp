@@ -48,12 +48,8 @@ class FundamentalsController:
         return self.lesson_content.get(lesson, f"Content for {lesson}\n\nThis lesson content will be added soon.")
 
     def get_quiz_questions(self, lesson, topic):
-        questions = list(self.quiz_bank_by_lesson.get(lesson, []))
-        if not questions:
-            questions = list(self.quiz_bank_by_topic.get(topic, []))
-        if len(questions) < 5:
-            questions.extend(FundamentalsContent.EXTRA_QUIZ_QUESTIONS)
-        return questions[:5]
+        del topic
+        return list(self.quiz_bank_by_lesson.get(lesson, []))[:5]
 
     def mark_lesson_completed(self, lesson_name):
         if self.category_id is None:

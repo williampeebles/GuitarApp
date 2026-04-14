@@ -1,5 +1,4 @@
 import sqlite3
-import json
 from database import Database
 from rankSystem import RankSystem
 
@@ -51,14 +50,6 @@ class DatabaseController:
             INSERT INTO categoryElements (category_id, element_type, completed, experience_points)
             VALUES (?, ?, ?, ?)
         ''', (category_id, element_type, completed, experience_points))
-        self.conn.commit()
-
-    def insert_test_bank_question(self, source_type, source_name, question_text, choices, answer_index):
-        """Insert a quiz question into testBank if it does not already exist."""
-        self.cursor.execute('''
-            INSERT OR IGNORE INTO testBank (source_type, source_name, question_text, choices_json, answer_index)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (source_type, source_name, question_text, json.dumps(choices), answer_index))
         self.conn.commit()
 
     def insert_song_tutorial(self, title_text, url_text, artist_name=""):
@@ -134,25 +125,6 @@ class DatabaseController:
         row = self.cursor.fetchone()
         return dict(row) if row else None
 
-    def get_test_bank_questions(self, source_type, source_name):
-        """Retrieve all test bank questions for a source type and source name."""
-        self.cursor.execute(
-            '''
-            SELECT question_id, source_type, source_name, question_text, choices_json, answer_index
-            FROM testBank
-            WHERE source_type = ? AND source_name = ?
-            ORDER BY question_id
-            ''',
-            (source_type, source_name)
-        )
-        rows = self.cursor.fetchall()
-        questions = []
-        for row in rows:
-            item = dict(row)
-            item["choices"] = json.loads(item.pop("choices_json"))
-            questions.append(item)
-        return questions
-
     def mark_element_completed(self, category_id, element_type, completed=1):
         """Mark a lesson element as completed and refresh category progress."""
         self.cursor.execute('''
@@ -193,9 +165,6 @@ class DatabaseController:
         fundamentals_lessons=None,
         maintenance_lessons=None,
         chord_names=None,
-        quiz_bank_by_lesson=None,
-        quiz_bank_by_topic=None,
-        extra_quiz_questions=None,
     ):
         """Seed the database with all initial data on first launch."""
         self._remove_legacy_songs_category()
@@ -203,11 +172,6 @@ class DatabaseController:
         self._seed_fundamentals_lessons(fundamentals_lessons or ())
         self._seed_maintenance_lessons(maintenance_lessons or ())
         self._seed_chords(chord_names or ())
-        self._seed_quiz_bank(
-            quiz_bank_by_lesson or {},
-            quiz_bank_by_topic or {},
-            extra_quiz_questions or [],
-        )
 
     def _remove_legacy_songs_category(self):
         """Remove the old Songs category row and any linked elements."""
@@ -296,38 +260,6 @@ class DatabaseController:
         )
         self.conn.commit()
 
-    def _seed_quiz_bank(self, quiz_bank_by_lesson, quiz_bank_by_topic, extra_quiz_questions):
-        """Insert all quiz questions that do not already exist in the testBank table."""
-        # Questions tied to a specific lesson
-        for lesson_name, questions in quiz_bank_by_lesson.items():
-            for question in questions:
-                self.insert_test_bank_question(
-                    source_type="lesson",
-                    source_name=lesson_name,
-                    question_text=question.get("question", ""),
-                    choices=question.get("choices", []),
-                    answer_index=question.get("answer", 0),
-                )
-        # Questions tied to a topic (shown after completing all lessons)
-        for topic_name, questions in quiz_bank_by_topic.items():
-            for question in questions:
-                self.insert_test_bank_question(
-                    source_type="topic",
-                    source_name=topic_name,
-                    question_text=question.get("question", ""),
-                    choices=question.get("choices", []),
-                    answer_index=question.get("answer", 0),
-                )
-        # Extra questions not tied to any specific lesson or topic
-        for question in extra_quiz_questions:
-            self.insert_test_bank_question(
-                source_type="global",
-                source_name="extra",
-                question_text=question.get("question", ""),
-                choices=question.get("choices", []),
-                answer_index=question.get("answer", 0),
-            )
-    
     def close(self):
         """Close the database connection."""
         if self.conn:

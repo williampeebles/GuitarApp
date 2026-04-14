@@ -293,6 +293,684 @@ class FundamentalsContent:
         ],
     }
 
+    QUIZ_BANK_BY_LESSON.update({
+        "Lesson 4: Guitar Angle": [
+            {
+                "question": "What guitar neck angle is recommended in this lesson?",
+                "choices": ["Slightly upward", "Flat to the floor", "Pointing straight up", "Pointing down"],
+                "answer": 0,
+            },
+            {
+                "question": "Why does guitar angle matter?",
+                "choices": ["It helps both hands move comfortably", "It changes string gauge", "It retunes the guitar", "It increases fret count"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you avoid while setting angle?",
+                "choices": ["Extreme tilt that bends the wrist", "Keeping the body stable", "Small adjustments", "Testing comfort"],
+                "answer": 0,
+            },
+            {
+                "question": "When should you re-check your guitar angle?",
+                "choices": ["When you change chairs or position", "Only once a month", "Only during tuning", "Never during practice"],
+                "answer": 0,
+            },
+            {
+                "question": "What is the mini drill goal for this lesson?",
+                "choices": ["Find the angle where notes feel cleanest", "Play as loudly as possible", "Use random neck positions", "Lock your wrist"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 5: Shoulder Alignment": [
+            {
+                "question": "What shoulder position is the target?",
+                "choices": ["Level and relaxed", "Raised to the ears", "Twisted hard", "Pinned back forcefully"],
+                "answer": 0,
+            },
+            {
+                "question": "Proper shoulder alignment mainly improves what?",
+                "choices": ["Endurance and freedom of movement", "String brightness", "Amp volume", "Capo placement"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you avoid to reach the neck?",
+                "choices": ["Twisting your torso", "Small arm adjustments", "Relaxed breathing", "Neutral posture"],
+                "answer": 0,
+            },
+            {
+                "question": "What reset tip is given between exercises?",
+                "choices": ["Inhale then drop shoulders on exhale", "Hold your breath", "Tighten shoulder muscles", "Lift both shoulders"],
+                "answer": 0,
+            },
+            {
+                "question": "Hidden shoulder tension most often causes what?",
+                "choices": ["Faster fatigue", "Automatic tuning", "Cleaner intonation", "Lower action"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 6: Neck Position": [
+            {
+                "question": "How should your neck and head be aligned?",
+                "choices": ["Head centered over spine", "Chin dropped constantly", "Neck twisted left", "Head leaned far forward"],
+                "answer": 0,
+            },
+            {
+                "question": "What should move first when checking the fretboard?",
+                "choices": ["Your eyes first", "Your shoulders first", "Your whole torso", "Your knees"],
+                "answer": 0,
+            },
+            {
+                "question": "If visibility is poor, what does the lesson suggest?",
+                "choices": ["Raise the guitar slightly", "Drop your head more", "Twist your neck", "Ignore discomfort"],
+                "answer": 0,
+            },
+            {
+                "question": "How often are short posture breaks suggested?",
+                "choices": ["About every 10 minutes", "Every hour", "Only after practice", "Never"],
+                "answer": 0,
+            },
+            {
+                "question": "What is a warning sign your neck angle is off?",
+                "choices": ["Tightness after one song", "Strings sounding bright", "Pick wear", "Warm fingertips"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 7: Wrist Alignment": [
+            {
+                "question": "What kind of wrist bend is preferred?",
+                "choices": ["Small and natural bends", "Deep forced bends", "Locked straight wrists", "No movement at all"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you avoid in the fretting wrist?",
+                "choices": ["Collapsing inward", "Light flexibility", "Neutral shape", "Short breaks"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you avoid in strumming motion?",
+                "choices": ["Stiff straight-line motions", "Relaxed motion", "Consistent tempo", "Smooth transitions"],
+                "answer": 0,
+            },
+            {
+                "question": "If stiffness appears, what should you do?",
+                "choices": ["Pause and shake out your hands", "Grip harder", "Play faster", "Ignore it"],
+                "answer": 0,
+            },
+            {
+                "question": "The practice idea in this lesson focuses on what?",
+                "choices": ["Resetting whenever wrists harden", "Holding tension continuously", "Maximizing speed first", "Avoiding slow scales"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 8: Common Posture Mistakes": [
+            {
+                "question": "Why is early posture error detection important?",
+                "choices": ["It saves time and discomfort", "It changes tuning quickly", "It replaces warmups", "It increases gain"],
+                "answer": 0,
+            },
+            {
+                "question": "Which is listed as a frequent posture issue?",
+                "choices": ["Rounded back and slouched shoulders", "Relaxed neutral spine", "Balanced feet", "Steady breathing"],
+                "answer": 0,
+            },
+            {
+                "question": "What breathing mistake is mentioned?",
+                "choices": ["Holding breath in difficult sections", "Breathing calmly", "Breathing through your nose", "Exhaling between drills"],
+                "answer": 0,
+            },
+            {
+                "question": "What correction method is recommended?",
+                "choices": ["Fix one mistake per session for 5 minutes", "Fix everything at once", "Ignore posture and play longer", "Only adjust weekly"],
+                "answer": 0,
+            },
+            {
+                "question": "Pressing the guitar too tightly usually causes what?",
+                "choices": ["Unnecessary tension", "Perfect rhythm", "Lower fret buzz", "Automatic muting"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 9: Preventing Back Pain": [
+            {
+                "question": "Back pain in practice is commonly caused by what?",
+                "choices": ["Long sessions without movement", "Using a metronome", "Changing picks", "Slow practice"],
+                "answer": 0,
+            },
+            {
+                "question": "What chair type is recommended?",
+                "choices": ["A firm chair with support", "A deep soft couch", "A bean bag", "A recliner"],
+                "answer": 0,
+            },
+            {
+                "question": "How should your weight and feet be managed?",
+                "choices": ["Feet planted with balanced weight", "Weight shifted to one side", "Feet tucked under chair", "One foot lifted"],
+                "answer": 0,
+            },
+            {
+                "question": "How often should you stand and stretch?",
+                "choices": ["Every 15 to 20 minutes", "Every 2 hours", "Only when pain starts", "Only after sessions"],
+                "answer": 0,
+            },
+            {
+                "question": "What end-of-session tip is given?",
+                "choices": ["Do a gentle back stretch for one minute", "Do heavy lifting", "Skip cooldown", "Lock your back straight"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 10: Daily Posture Practice": [
+            {
+                "question": "How does posture improve fastest in this lesson?",
+                "choices": ["Short, consistent routines", "Rare long sessions", "Random practice lengths", "Only weekend practice"],
+                "answer": 0,
+            },
+            {
+                "question": "How long is the suggested daily routine?",
+                "choices": ["About 10 minutes", "About 45 minutes", "About 1 minute", "About 2 hours"],
+                "answer": 0,
+            },
+            {
+                "question": "What is included in the routine?",
+                "choices": ["Slow chord changes with relaxed shoulders", "Fast solos only", "Skipping setup checks", "No breaks"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you do for 2 minutes in the routine?",
+                "choices": ["Neck and wrist reset breaks", "Maximum speed drills", "Palm-muted power chords", "String changes"],
+                "answer": 0,
+            },
+            {
+                "question": "What is the end goal of this routine?",
+                "choices": ["Finish feeling controlled and relaxed", "Finish exhausted and tense", "Play louder each day", "Use more force"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 2: Fretting Hand Position": [
+            {
+                "question": "Where should the thumb be in this lesson?",
+                "choices": ["Behind the neck", "Over every fret", "On the strings", "Under the neck"],
+                "answer": 0,
+            },
+            {
+                "question": "How should fingers approach the strings?",
+                "choices": ["From above with curved joints", "Flat from the side", "With straight locked fingers", "With palm pressure"],
+                "answer": 0,
+            },
+            {
+                "question": "Where should fretting pressure be placed?",
+                "choices": ["Close to the fret wire", "Middle of fret space only", "On top of the metal fret", "On the fingerboard edge"],
+                "answer": 0,
+            },
+            {
+                "question": "What should the palm avoid doing?",
+                "choices": ["Collapsing into the neck", "Staying relaxed", "Remaining light", "Allowing finger reach"],
+                "answer": 0,
+            },
+            {
+                "question": "What does the drill in this lesson train?",
+                "choices": ["Consistent clean tone per note", "Maximum hand force", "Fast random jumps", "Open-string muting only"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 3: Finger Strength Training": [
+            {
+                "question": "Finger strength should come from what?",
+                "choices": ["Control, not force", "Force only", "Shoulder tension", "Locked wrists"],
+                "answer": 0,
+            },
+            {
+                "question": "Which pattern is recommended for training?",
+                "choices": ["Slow chromatic patterns", "Random fast strums", "Only open chords", "Palm-muted tremolo"],
+                "answer": 0,
+            },
+            {
+                "question": "What is a core pressure habit in this lesson?",
+                "choices": ["Light squeeze then immediate relaxation", "Maximum squeeze at all times", "No pressure changes", "Grip until forearm burns"],
+                "answer": 0,
+            },
+            {
+                "question": "Where should unused fingers stay?",
+                "choices": ["Close to the fretboard", "Fully extended away", "Curled into palm tightly", "Pressed on other strings"],
+                "answer": 0,
+            },
+            {
+                "question": "If your forearm burns quickly, what should you do?",
+                "choices": ["Reduce pressure and tempo", "Increase pressure", "Ignore the burn", "Stop using a metronome"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 4: String Muting Basics": [
+            {
+                "question": "What is the purpose of muting?",
+                "choices": ["Control unwanted string noise", "Make notes louder", "Lower tuning", "Change scale length"],
+                "answer": 0,
+            },
+            {
+                "question": "Which hand can help with muting in this lesson?",
+                "choices": ["Both hands", "Only fretting hand", "Only strumming hand", "Neither hand"],
+                "answer": 0,
+            },
+            {
+                "question": "What can the strumming hand do for low strings?",
+                "choices": ["Use palm muting", "Press harder with pick", "Avoid contact completely", "Mute with thumb nail"],
+                "answer": 0,
+            },
+            {
+                "question": "After a note or chord, what muting habit is suggested?",
+                "choices": ["Lift pressure slightly", "Increase pressure", "Hold full sustain always", "Move hand away"],
+                "answer": 0,
+            },
+            {
+                "question": "What does the exercise focus on?",
+                "choices": ["Stopping sound right after each strum", "Long continuous ring", "Only speed changes", "Ignoring transitions"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 5: Fretting Near the Fret": [
+            {
+                "question": "Where should your fingertip be placed for best clarity?",
+                "choices": ["Just behind the fret wire", "Middle of the fret space", "On top of the fret wire", "Far from the fret"],
+                "answer": 0,
+            },
+            {
+                "question": "How much pressure should you use?",
+                "choices": ["Minimum needed for clean sound", "Maximum force", "No pressure", "Variable pressure with noise"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you avoid when placing the finger?",
+                "choices": ["Directly pressing on the metal fret", "Being near the fret wire", "Listening for buzz", "Adjusting position"],
+                "answer": 0,
+            },
+            {
+                "question": "If the note buzzes, what should you do?",
+                "choices": ["Reposition the finger", "Press harder forever", "Ignore it", "Mute all strings"],
+                "answer": 0,
+            },
+            {
+                "question": "What is the key feedback signal in this lesson?",
+                "choices": ["Clean tone", "Loudest volume", "Fastest speed", "Strongest grip"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 6: Thumb Position Behind Neck": [
+            {
+                "question": "Where should the thumb often sit for control?",
+                "choices": ["Roughly opposite the middle finger", "Wrapped over the neck always", "On top of strings", "At neck heel only"],
+                "answer": 0,
+            },
+            {
+                "question": "How much counter-pressure is recommended?",
+                "choices": ["Light counter-pressure when needed", "Constant heavy pressure", "No pressure ever", "Alternating maximum pressure"],
+                "answer": 0,
+            },
+            {
+                "question": "What thumb habit should beginners avoid?",
+                "choices": ["Wrapping over neck for every exercise", "Moving with hand shifts", "Re-centering for stretches", "Keeping grip relaxed"],
+                "answer": 0,
+            },
+            {
+                "question": "How should thumb movement relate to hand shifts?",
+                "choices": ["Move with the hand, do not lock it", "Lock it in one place", "Move independently and randomly", "Lift it off the neck entirely"],
+                "answer": 0,
+            },
+            {
+                "question": "If fingers cannot stretch, what should you check first?",
+                "choices": ["Re-center your thumb", "Increase shoulder tension", "Lower tuning", "Switch picks"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 7: Finger Independence Exercises": [
+            {
+                "question": "What is the goal of finger independence work?",
+                "choices": ["Move one finger without disturbing others", "Use all fingers together always", "Increase hand tension", "Play louder chords"],
+                "answer": 0,
+            },
+            {
+                "question": "Which pattern is included in this lesson?",
+                "choices": ["1-2-3-4 and 4-3-2-1", "Only 1-3-4", "Random skips only", "Open-string tremolo"],
+                "answer": 0,
+            },
+            {
+                "question": "Where should each finger stay between notes?",
+                "choices": ["Close to the fretboard", "Lifted very high", "Pressed into palm", "Resting on pickguard"],
+                "answer": 0,
+            },
+            {
+                "question": "How should tempo progression be handled?",
+                "choices": ["Start slow with metronome, increase only when clean", "Start fast immediately", "Ignore timing", "Increase speed despite mistakes"],
+                "answer": 0,
+            },
+            {
+                "question": "This lesson says independence grows from what?",
+                "choices": ["Consistency", "Rushing", "Grip tension", "Long breaks"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 8: Building Calluses": [
+            {
+                "question": "How should calluses be developed?",
+                "choices": ["Gradually with safe daily practice", "As fast as possible with force", "By over-gripping", "By avoiding practice"],
+                "answer": 0,
+            },
+            {
+                "question": "What session style is recommended?",
+                "choices": ["Shorter sessions practiced daily", "One very long weekly session", "Only monthly sessions", "Continuous no-break sessions"],
+                "answer": 0,
+            },
+            {
+                "question": "When should you stop during early callus building?",
+                "choices": ["Before skin becomes overly irritated", "Only when string breaks", "Never stop", "After sharp pain starts"],
+                "answer": 0,
+            },
+            {
+                "question": "What fingertip care is suggested?",
+                "choices": ["Keep fingertips clean and dry", "Keep fingers wet", "Use rough sandpaper", "Apply heavy oils before playing"],
+                "answer": 0,
+            },
+            {
+                "question": "Which discomfort is normal according to this lesson?",
+                "choices": ["Mild tenderness", "Sharp pain", "Finger numbness", "Joint locking"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 9: Stretching and Flexibility": [
+            {
+                "question": "Why does this lesson include stretching?",
+                "choices": ["To reduce stiffness and prepare hands", "To replace technique practice", "To increase string tension", "To tune faster"],
+                "answer": 0,
+            },
+            {
+                "question": "Which movement is part of the routine?",
+                "choices": ["Wrist circles both directions", "Neck locking", "Finger clenching for minutes", "Shoulder shrug holds"],
+                "answer": 0,
+            },
+            {
+                "question": "Which finger movement is suggested?",
+                "choices": ["Light extension and flexion holds", "Forced hyperextension", "No finger movement", "Fast tapping only"],
+                "answer": 0,
+            },
+            {
+                "question": "What upper-body movement appears in the routine?",
+                "choices": ["Shoulder rolls and neck release", "Chest presses", "Heavy shrugs", "Backbends"],
+                "answer": 0,
+            },
+            {
+                "question": "What is the key safety rule for stretching?",
+                "choices": ["Never force through pain", "Stretch as hard as possible", "Ignore discomfort", "Only stretch after pain"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 10: Advanced Hand Positioning": [
+            {
+                "question": "As pieces get harder, hand positioning should be what?",
+                "choices": ["Adaptive, efficient, and relaxed", "Fixed and rigid", "Forceful and tense", "Random per measure"],
+                "answer": 0,
+            },
+            {
+                "question": "What should be minimized in advanced positioning?",
+                "choices": ["Unnecessary motion", "Planning transitions", "Thumb-finger coordination", "Small loop practice"],
+                "answer": 0,
+            },
+            {
+                "question": "How should thumb and fingers move in this lesson?",
+                "choices": ["As one coordinated unit", "In opposite random directions", "With thumb locked", "With fingers fully lifted"],
+                "answer": 0,
+            },
+            {
+                "question": "When should you prepare the next shape?",
+                "choices": ["Early during transitions", "After missing the chord", "Only at the last moment", "Never in advance"],
+                "answer": 0,
+            },
+            {
+                "question": "How should difficult transitions be practiced?",
+                "choices": ["In small loops before full playthroughs", "Only in full-speed songs", "With no repetition", "By skipping weak spots"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 2: Basic Downstrokes": [
+            {
+                "question": "What matters more than speed in this lesson?",
+                "choices": ["Consistency and timing", "Maximum force", "Random accents", "Arm size"],
+                "answer": 0,
+            },
+            {
+                "question": "Downstrokes should come primarily from what?",
+                "choices": ["Relaxed wrist with light forearm support", "Locked elbow", "Finger-only flicks", "Shoulder swings"],
+                "answer": 0,
+            },
+            {
+                "question": "How should stroke depth be managed?",
+                "choices": ["Controlled and even", "As deep as possible", "Different every stroke", "Ignored"],
+                "answer": 0,
+            },
+            {
+                "question": "What does the drill use for timing?",
+                "choices": ["Quarter-note downstrokes with metronome", "No click at all", "Triplets at max tempo", "Only muted strums"],
+                "answer": 0,
+            },
+            {
+                "question": "What should happen after each stroke?",
+                "choices": ["Smooth return to start position", "Sudden arm lock", "Pause for a full beat", "Reset grip each time"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 3: Basic Upstrokes": [
+            {
+                "question": "Upstrokes are essential for what?",
+                "choices": ["Balanced strumming patterns", "Lowering action", "Changing tuning", "Increasing fret size"],
+                "answer": 0,
+            },
+            {
+                "question": "How should upstrokes feel?",
+                "choices": ["Light and controlled", "Aggressive and tense", "Heavy and slow", "Random"],
+                "answer": 0,
+            },
+            {
+                "question": "What force should be avoided in upstrokes?",
+                "choices": ["Aggressive upward force", "Relaxed return motion", "Even timing", "Consistent angle"],
+                "answer": 0,
+            },
+            {
+                "question": "Upstroke timing should match what?",
+                "choices": ["The downstrokes", "Only the beat 1 accent", "Random accents", "String changes only"],
+                "answer": 0,
+            },
+            {
+                "question": "What exercise is suggested?",
+                "choices": ["Alternate one downstroke and one upstroke slowly", "Only upstrokes fast", "Only downstrokes", "Silent right-hand motion only"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 4: Down-Up Strumming Pattern": [
+            {
+                "question": "What count pattern is taught?",
+                "choices": ["1-and-2-and-3-and-4-and", "1-2-3 only", "Triplet swing only", "No counting"],
+                "answer": 0,
+            },
+            {
+                "question": "Where do downstrokes land in this lesson?",
+                "choices": ["On the numbers", "On every and", "Only beat 4", "Randomly"],
+                "answer": 0,
+            },
+            {
+                "question": "Where do upstrokes land in this lesson?",
+                "choices": ["On the ands", "On numbers only", "On rests only", "Not used"],
+                "answer": 0,
+            },
+            {
+                "question": "What hand-motion rule is emphasized?",
+                "choices": ["Keep the hand moving continuously", "Stop between every stroke", "Lock wrist after each beat", "Use only elbow"],
+                "answer": 0,
+            },
+            {
+                "question": "What practice loop is recommended first?",
+                "choices": ["One simple chord with timing locked in", "Fast chord changes immediately", "No metronome counting", "Complex syncopation first"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 5: Wrist Rotation Technique": [
+            {
+                "question": "What does controlled wrist rotation improve?",
+                "choices": ["Smooth and efficient strumming", "String lifespan", "Pickup output", "Neck relief"],
+                "answer": 0,
+            },
+            {
+                "question": "What usually reduces consistency?",
+                "choices": ["Large arm swings", "Small circular motion", "Loose forearm", "Consistent contact"],
+                "answer": 0,
+            },
+            {
+                "question": "What kind of wrist motion is preferred?",
+                "choices": ["Small circular motion", "Rigid linear motion", "No wrist movement", "Shoulder-only motion"],
+                "answer": 0,
+            },
+            {
+                "question": "How should pick contact be across strings?",
+                "choices": ["Consistent", "Random and uneven", "As hard as possible", "Avoiding middle strings only"],
+                "answer": 0,
+            },
+            {
+                "question": "What outcome does this lesson target?",
+                "choices": ["Better tone with less fatigue", "More tension for volume", "Longer arm travel", "Faster without control"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 6: Maintaining Rhythm": [
+            {
+                "question": "What should be prioritized under pressure?",
+                "choices": ["Steady pulse", "Perfect chord shape first", "Fast tempo", "Complex fills"],
+                "answer": 0,
+            },
+            {
+                "question": "What right-hand habit is emphasized?",
+                "choices": ["Keep movement constant", "Pause during hard changes", "Stop on mistakes", "Only move on downbeats"],
+                "answer": 0,
+            },
+            {
+                "question": "What tool setting is recommended?",
+                "choices": ["Metronome on slow settings", "No click ever", "Max tempo only", "Random BPM"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you simplify if timing breaks down?",
+                "choices": ["Chord changes", "Counting", "Hand motion", "Practice frequency"],
+                "answer": 0,
+            },
+            {
+                "question": "If timing collapses, what is the correct response?",
+                "choices": ["Slow down and rebuild consistency", "Push faster", "Ignore the click", "Stop using rhythm drills"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 7: String Muting Between Chords": [
+            {
+                "question": "Why is muting between chords important?",
+                "choices": ["It keeps transitions clean", "It increases sustain always", "It lowers pitch", "It replaces fretting"],
+                "answer": 0,
+            },
+            {
+                "question": "What should fretting pressure do after a strum?",
+                "choices": ["Release to stop unwanted ring", "Increase immediately", "Stay fully pressed", "Move to open strings"],
+                "answer": 0,
+            },
+            {
+                "question": "What can help shorten sustain?",
+                "choices": ["Palm muting", "Bending strings", "Harder picking", "Raising action"],
+                "answer": 0,
+            },
+            {
+                "question": "Mute timing should be coordinated with what?",
+                "choices": ["The beat", "Only visual cues", "Chord names", "String numbers"],
+                "answer": 0,
+            },
+            {
+                "question": "What is the core goal of this lesson?",
+                "choices": ["Intentional, separated chord sound", "Continuous blurry ringing", "Faster muting only", "No dynamic contrast"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 8: Different Strumming Patterns": [
+            {
+                "question": "Why learn different strumming patterns?",
+                "choices": ["To expand rhythmic vocabulary", "To avoid metronome work", "To remove groove", "To reduce chord knowledge"],
+                "answer": 0,
+            },
+            {
+                "question": "Which option is one pattern type listed?",
+                "choices": ["Straight eighth-note pattern", "Only quarter rests", "Single upstroke per bar", "Silence on every beat"],
+                "answer": 0,
+            },
+            {
+                "question": "What does syncopation add?",
+                "choices": ["Rhythmic variation and feel", "Lower string tension", "Automatic speed", "Different tuning"],
+                "answer": 0,
+            },
+            {
+                "question": "What dynamics idea is mentioned?",
+                "choices": ["Soft verse vs stronger chorus", "Same volume always", "Mute all choruses", "Only loud verses"],
+                "answer": 0,
+            },
+            {
+                "question": "How should you approach learning patterns?",
+                "choices": ["Master one pattern at a time", "Mix all patterns immediately", "Skip groove practice", "Avoid repetition"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 9: Playing with a Metronome": [
+            {
+                "question": "What does metronome practice primarily build?",
+                "choices": ["Reliable time", "Faster tuning", "Stronger grip", "Higher string action"],
+                "answer": 0,
+            },
+            {
+                "question": "What tempo should you start with?",
+                "choices": ["A comfortable tempo", "The fastest possible tempo", "A random tempo", "No tempo marking"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you do while strumming to the click?",
+                "choices": ["Count beats aloud", "Hold your breath", "Ignore beat numbers", "Only watch your fretting hand"],
+                "answer": 0,
+            },
+            {
+                "question": "How should tempo increases be made?",
+                "choices": ["In small steps", "In large jumps", "Only after mistakes", "Every 5 seconds"],
+                "answer": 0,
+            },
+            {
+                "question": "When should you move up in tempo?",
+                "choices": ["After 60 seconds of clean, steady playing", "After one clean measure", "Immediately after tuning", "Whenever it feels hard"],
+                "answer": 0,
+            },
+        ],
+        "Lesson 10: Building Speed and Accuracy": [
+            {
+                "question": "Speed in this lesson should come from what?",
+                "choices": ["Efficient technique and stable timing", "Extra tension", "Harder picking only", "Skipping slow work"],
+                "answer": 0,
+            },
+            {
+                "question": "What is the first step in the method?",
+                "choices": ["Clean slow repetitions", "Maximum tempo runs", "No metronome", "Heavy forearm tension"],
+                "answer": 0,
+            },
+            {
+                "question": "How should tempo increases be handled?",
+                "choices": ["By small increments", "By doubling instantly", "By random changes", "Only after errors"],
+                "answer": 0,
+            },
+            {
+                "question": "What should you do when errors cluster?",
+                "choices": ["Stop and reset", "Push through at same speed", "Ignore the errors", "Grip tighter"],
+                "answer": 0,
+            },
+            {
+                "question": "If tone quality drops, what is the rule?",
+                "choices": ["Reduce tempo and rebuild precision", "Increase speed more", "Skip technique", "Switch strings immediately"],
+                "answer": 0,
+            },
+        ],
+    })
+
     EXTRA_QUIZ_QUESTIONS = [
         {
             "question": "What should you do before playing to avoid tension?",
@@ -673,3 +1351,4 @@ Progress Method:
 
 Rule of Thumb: If tone quality drops, reduce tempo and rebuild precision.""",
     }
+
