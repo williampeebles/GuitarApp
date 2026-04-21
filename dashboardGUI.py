@@ -16,6 +16,17 @@ class DashboardTab:
         self.background_source = None
         self.background_image = None
         self.background_label = None
+        self.rank_progress_bar = None
+        self.rank_level_text_id = None
+        self.rank_meta_text_id = None
+        self.rank_progress_canvas = None
+        self.progress_breakdown_container = None
+        self.suggestions_list_frame = None
+        self._refresh_job_id = None
+        self._refresh_interval_ms = 1500
+        self._last_rank_progress = None
+        self._last_progress_breakdown = None
+        self._last_suggested_sections = None
         self._build_layout()
 
     def _build_layout(self):
@@ -52,29 +63,27 @@ class DashboardTab:
         progress_canvas.progress_strip = progress_strip
         progress_strip_id = progress_canvas.create_image(0, 0, image=progress_strip, anchor="nw")
 
-        rank_progress = self.controller.get_rank_progress()
-
-        dashboard_progress = ttk.Progressbar(
+        self.rank_progress_canvas = progress_canvas
+        self.rank_progress_bar = ttk.Progressbar(
             progress_canvas,
             orient=tk.HORIZONTAL,
             length=400,
             mode="determinate",
         )
-        dashboard_progress["value"] = rank_progress["progress_percent"]
-        level_text_id = progress_canvas.create_text(
+        self.rank_level_text_id = progress_canvas.create_text(
             0,
             10,
-            text=rank_progress["current_rank"],
+            text="",
             font=("Arial", 12, "bold"),
             fill="#000000",
             anchor="n",
         )
-        progress_window_id = progress_canvas.create_window(0, 34, anchor="n", window=dashboard_progress)
+        progress_window_id = progress_canvas.create_window(0, 34, anchor="n", window=self.rank_progress_bar)
 
-        progress_meta_id = progress_canvas.create_text(
+        self.rank_meta_text_id = progress_canvas.create_text(
             0,
             56,
-            text=f"XP: {rank_progress['total_xp']}  •  Next: {rank_progress['next_rank']} ({rank_progress['xp_to_next']} XP)",
+            text="",
             font=("Arial", 10),
             fill="#000000",
             anchor="n",
@@ -86,9 +95,9 @@ class DashboardTab:
                 progress_canvas.progress_strip = ImageTk.PhotoImage(resized_strip)
                 progress_canvas.itemconfig(progress_strip_id, image=progress_canvas.progress_strip)
             center_x = event.width / 2
-            progress_canvas.coords(level_text_id, center_x, 10)
+            progress_canvas.coords(self.rank_level_text_id, center_x, 10)
             progress_canvas.coords(progress_window_id, center_x, 34)
-            progress_canvas.coords(progress_meta_id, center_x, 56)
+            progress_canvas.coords(self.rank_meta_text_id, center_x, 56)
 
         progress_canvas.bind("<Configure>", _center_progress_widgets)
 
@@ -112,60 +121,8 @@ class DashboardTab:
         )
         progress_label.pack(pady=10)
 
-        progress_breakdown_container = tk.Frame(progress_frame, bg="#000000")
-        progress_breakdown_container.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 12))
-
-        progress_breakdown = self.controller.get_progress_breakdown()
-        for section in progress_breakdown:
-            section_row = tk.Frame(progress_breakdown_container, bg="#000000", height=35)
-            section_row.pack(fill=tk.X, pady=(8, 2))
-            section_row.pack_propagate(False)
-
-            section_label = tk.Label(
-                section_row,
-                text=f"{section['name']}: {section['percent']:.1f}%",
-                font=("Arial", 13, "bold"),
-                bg="#000000",
-                fg="white",
-                anchor="w",
-                justify="left",
-            )
-            section_label.pack(side=tk.LEFT, fill=tk.X, expand=True)
-
-            section_progress = ttk.Progressbar(
-                section_row,
-                orient=tk.HORIZONTAL,
-                mode="determinate",
-                length=420,
-            )
-            section_progress["value"] = section["percent"]
-            section_progress.pack(side=tk.RIGHT, padx=(8, 0))
-
-            for subsection in section.get("subsections", []):
-                subsection_row = tk.Frame(progress_breakdown_container, bg="#000000", height=28)
-                subsection_row.pack(fill=tk.X, pady=(4, 0))
-                subsection_row.pack_propagate(False)
-
-                subsection_label = tk.Label(
-                    subsection_row,
-                    text=f"  • {subsection['name']}: {subsection['percent']:.1f}%",
-                    font=("Arial", 12),
-                    bg="#000000",
-                    fg="#d9d9d9",
-                    anchor="w",
-                    justify="left",
-                    wraplength=340,
-                )
-                subsection_label.pack(side=tk.LEFT, fill=tk.X, expand=True)
-
-                subsection_progress = ttk.Progressbar(
-                    subsection_row,
-                    orient=tk.HORIZONTAL,
-                    mode="determinate",
-                    length=360,
-                )
-                subsection_progress["value"] = subsection["percent"]
-                subsection_progress.pack(side=tk.RIGHT, padx=(8, 0))
+        self.progress_breakdown_container = tk.Frame(progress_frame, bg="#000000")
+        self.progress_breakdown_container.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 12))
 
         # Right side container for suggestions
         right_container = tk.Frame(self.frame, bg="#f5f5f5")
@@ -191,13 +148,74 @@ class DashboardTab:
         )
         suggestions_label.pack(pady=10)
 
-        suggestions_list_frame = tk.Frame(suggestions_frame, bg="#000000")
-        suggestions_list_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 10))
+        self.suggestions_list_frame = tk.Frame(suggestions_frame, bg="#000000")
+        self.suggestions_list_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 10))
 
-        suggested_sections = self.controller.get_suggested_sections(limit=7)
+        self.refresh_data()
+        self._schedule_auto_refresh()
+
+    def _render_progress_breakdown(self, progress_breakdown):
+        for child in self.progress_breakdown_container.winfo_children():
+            child.destroy()
+
+        for section in progress_breakdown:
+            section_row = tk.Frame(self.progress_breakdown_container, bg="#000000", height=35)
+            section_row.pack(fill=tk.X, pady=(8, 2))
+            section_row.pack_propagate(False)
+
+            section_label = tk.Label(
+                section_row,
+                text=f"{section['name']}: {section['percent']:.1f}%",
+                font=("Arial", 13, "bold"),
+                bg="#000000",
+                fg="white",
+                anchor="w",
+                justify="left",
+            )
+            section_label.pack(side=tk.LEFT, fill=tk.X, expand=True)
+
+            section_progress = ttk.Progressbar(
+                section_row,
+                orient=tk.HORIZONTAL,
+                mode="determinate",
+                length=420,
+            )
+            section_progress["value"] = section["percent"]
+            section_progress.pack(side=tk.RIGHT, padx=(8, 0))
+
+            for subsection in section.get("subsections", []):
+                subsection_row = tk.Frame(self.progress_breakdown_container, bg="#000000", height=28)
+                subsection_row.pack(fill=tk.X, pady=(4, 0))
+                subsection_row.pack_propagate(False)
+
+                subsection_label = tk.Label(
+                    subsection_row,
+                    text=f"  • {subsection['name']}: {subsection['percent']:.1f}%",
+                    font=("Arial", 12),
+                    bg="#000000",
+                    fg="#d9d9d9",
+                    anchor="w",
+                    justify="left",
+                    wraplength=340,
+                )
+                subsection_label.pack(side=tk.LEFT, fill=tk.X, expand=True)
+
+                subsection_progress = ttk.Progressbar(
+                    subsection_row,
+                    orient=tk.HORIZONTAL,
+                    mode="determinate",
+                    length=360,
+                )
+                subsection_progress["value"] = subsection["percent"]
+                subsection_progress.pack(side=tk.RIGHT, padx=(8, 0))
+
+    def _render_suggestions(self, suggested_sections):
+        for child in self.suggestions_list_frame.winfo_children():
+            child.destroy()
+
         if not suggested_sections:
             no_suggestions_label = tk.Label(
-                suggestions_list_frame,
+                self.suggestions_list_frame,
                 text="All tracked sections are complete.",
                 font=("Arial", 12),
                 bg="#000000",
@@ -206,20 +224,56 @@ class DashboardTab:
                 justify="left",
             )
             no_suggestions_label.pack(fill=tk.X)
-        else:
-            for item in suggested_sections:
-                suggestion_item_label = tk.Label(
-                    suggestions_list_frame,
-                    text=f"• {item['name']} ({item['percent']:.1f}%)",
-                    font=("Arial", 12),
-                    bg="#000000",
-                    fg="#d9d9d9",
-                    anchor="w",
-                    justify="left",
-                    wraplength=360,
-                )
-                suggestion_item_label.pack(fill=tk.X, pady=(0, 3))
+            return
+
+        for item in suggested_sections:
+            suggestion_item_label = tk.Label(
+                self.suggestions_list_frame,
+                text=f"• {item['name']} ({item['percent']:.1f}%)",
+                font=("Arial", 12),
+                bg="#000000",
+                fg="#d9d9d9",
+                anchor="w",
+                justify="left",
+                wraplength=360,
+            )
+            suggestion_item_label.pack(fill=tk.X, pady=(0, 3))
+
+    def refresh_data(self):
+        rank_progress = self.controller.get_rank_progress()
+        progress_breakdown = self.controller.get_progress_breakdown()
+        suggested_sections = self.controller.get_suggested_sections(limit=7)
+
+        if self._last_rank_progress != rank_progress:
+            self.rank_progress_bar["value"] = rank_progress["progress_percent"]
+            self.rank_progress_canvas.itemconfig(
+                self.rank_level_text_id,
+                text=rank_progress["current_rank"],
+            )
+            self.rank_progress_canvas.itemconfig(
+                self.rank_meta_text_id,
+                text=(
+                    f"XP: {rank_progress['total_xp']}  •  Next: "
+                    f"{rank_progress['next_rank']} ({rank_progress['xp_to_next']} XP)"
+                ),
+            )
+            self._last_rank_progress = rank_progress
+
+        if self._last_progress_breakdown != progress_breakdown:
+            self._render_progress_breakdown(progress_breakdown)
+            self._last_progress_breakdown = progress_breakdown
+
+        if self._last_suggested_sections != suggested_sections:
+            self._render_suggestions(suggested_sections)
+            self._last_suggested_sections = suggested_sections
+
+    def _schedule_auto_refresh(self):
+        self.refresh_data()
+        self._refresh_job_id = self.frame.after(self._refresh_interval_ms, self._schedule_auto_refresh)
 
     def close(self):
+        if self._refresh_job_id is not None:
+            self.frame.after_cancel(self._refresh_job_id)
+            self._refresh_job_id = None
         if self.controller:
             self.controller.close()
