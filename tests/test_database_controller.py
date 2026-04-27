@@ -2,7 +2,6 @@ import os
 import tempfile
 import unittest
 
-from database import Database
 from databaseController import DatabaseController
 
 
@@ -13,7 +12,7 @@ class TestDatabaseController(unittest.TestCase):
         self.db_path = temp.name
         temp.close()
 
-        schema_db = Database(self.db_path)
+        schema_db = DatabaseController(self.db_path)
         schema_db.create_schema()
         schema_db.close()
 

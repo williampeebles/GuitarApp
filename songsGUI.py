@@ -66,6 +66,14 @@ class SongsTab:
         self.links_frame.bind("<Configure>", _sync_scroll_region)
         list_canvas.bind("<Configure>", _sync_inner_width)
 
+        def _on_mousewheel(event):
+            list_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+        list_canvas.bind("<MouseWheel>", _on_mousewheel)
+        self.links_frame.bind("<MouseWheel>", _on_mousewheel)
+        self._list_canvas = list_canvas
+        self._on_mousewheel = _on_mousewheel
+
         for song_title, url in self.controller.get_song_tutorials():
             self._add_song_link_label(song_title, url)
 
@@ -150,6 +158,8 @@ class SongsTab:
         )
         link_label.pack(fill="x", padx=6, pady=(4, 2), anchor="w")
         link_label.bind("<Button-1>", lambda _event, target=url: self.controller.open_song_link(target))
+        if hasattr(self, "_on_mousewheel"):
+            link_label.bind("<MouseWheel>", self._on_mousewheel)
 
     def _handle_add_song(self):
         result = self.controller.add_song_tutorial(

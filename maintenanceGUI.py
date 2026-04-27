@@ -43,7 +43,20 @@ class MaintenanceTab:
             hover_color="#555555",
             command=self._toggle_sidebar,
         )
-        self.toggle_button.pack(anchor="center")
+        self.toggle_button.pack(side="left", padx=(0, 8))
+
+        self.start_quiz_button = ctk.CTkButton(
+            header_frame,
+            text="Start 5-Question Quiz",
+            font=("Arial", 14),
+            width=180,
+            fg_color="#333333",
+            text_color="white",
+            hover_color="#555555",
+            state="disabled",
+            command=self._start_quiz,
+        )
+        self.start_quiz_button.pack(side="left")
 
         content_container = tk.Frame(content_frame, bg="white")
         content_container.pack(fill="both", expand=True, padx=12, pady=(0, 12))
@@ -176,19 +189,7 @@ class MaintenanceTab:
         )
         self.quiz_status_label.pack(anchor="w")
 
-        self.start_quiz_button = ctk.CTkButton(
-            self.quiz_container,
-            text="Start 5-Question Quiz",
-            font=("Arial", 12),
-            fg_color="#333333",
-            text_color="white",
-            hover_color="#555555",
-            command=self._start_quiz,
-        )
-        self.start_quiz_button.pack(anchor="w", pady=(8, 0))
-
-        if not current_lesson:
-            self.start_quiz_button.configure(state="disabled")
+        self.start_quiz_button.configure(state="normal" if current_lesson else "disabled")
 
         self._bind_quiz_mousewheel(self.quiz_container)
 

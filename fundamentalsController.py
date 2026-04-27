@@ -1,9 +1,25 @@
 from databaseController import DatabaseController
-from fundamentalsContent import FundamentalsContent
+from contentLoader import load_content_file
 
 
 class FundamentalsController:
     """Holds fundamentals data and persistence logic."""
+
+    _content = None
+
+    @classmethod
+    def _get_content(cls):
+        if cls._content is None:
+            cls._content = load_content_file("fundamentals_content.txt")
+        return cls._content
+
+    @classmethod
+    def get_fundamentals_lessons(cls):
+        return tuple(cls._get_content()["FUNDAMENTALS_LESSONS"])
+
+    @classmethod
+    def get_lesson_items_by_topic(cls):
+        return cls._get_content()["LESSON_ITEMS_BY_TOPIC"]
 
     def __init__(self):
         self.db = DatabaseController()
@@ -13,10 +29,11 @@ class FundamentalsController:
         self.current_topic = None
         self.current_lesson = None
         self.last_quiz_questions = []
-        self.quiz_bank_by_lesson = FundamentalsContent.QUIZ_BANK_BY_LESSON
-        self.quiz_bank_by_topic = FundamentalsContent.QUIZ_BANK_BY_TOPIC
-        self.lesson_items_by_topic = FundamentalsContent.LESSON_ITEMS_BY_TOPIC
-        self.lesson_content = FundamentalsContent.LESSON_CONTENT
+        content = self._get_content()
+        self.quiz_bank_by_lesson = content["QUIZ_BANK_BY_LESSON"]
+        self.quiz_bank_by_topic = content["QUIZ_BANK_BY_TOPIC"]
+        self.lesson_items_by_topic = content["LESSON_ITEMS_BY_TOPIC"]
+        self.lesson_content = content["LESSON_CONTENT"]
         self._load_completed_lessons()
 
     def _load_completed_lessons(self):

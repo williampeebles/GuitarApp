@@ -1,17 +1,35 @@
-from maintenanceContent import MaintenanceContent
+from contentLoader import load_content_file
 from databaseController import DatabaseController
 
 
 class MaintenanceController:
     """Provides maintenance lesson data and selection state."""
 
+    _content = None
+
+    @classmethod
+    def _get_content(cls):
+        if cls._content is None:
+            cls._content = load_content_file("maintenance_content.txt")
+        return cls._content
+
+    @classmethod
+    def get_maintenance_lessons(cls):
+        return tuple(cls._get_content()["MAINTENANCE_LESSONS"])
+
+    @classmethod
+    def get_lesson_items_by_topic(cls):
+        return cls._get_content()["LESSON_ITEMS_BY_TOPIC"]
+
     def __init__(self):
         self.db = DatabaseController()
         self.category_id = None
-        self.lesson_items_by_topic = MaintenanceContent.LESSON_ITEMS_BY_TOPIC
-        self.lesson_content = MaintenanceContent.LESSON_CONTENT
-        self.quiz_bank_by_lesson = MaintenanceContent.QUIZ_BANK_BY_LESSON
-        self.quiz_bank_by_topic = MaintenanceContent.QUIZ_BANK_BY_TOPIC
+        content = self._get_content()
+        self.lesson_items_by_topic = content["LESSON_ITEMS_BY_TOPIC"]
+        self.lesson_content = content["LESSON_CONTENT"]
+        self.quiz_bank_by_lesson = content["QUIZ_BANK_BY_LESSON"]
+        self.quiz_bank_by_topic = content["QUIZ_BANK_BY_TOPIC"]
+        self.extra_quiz_questions = content["EXTRA_QUIZ_QUESTIONS"]
         self.completed_lessons = set()
         self.current_topic = None
         self.current_lesson = None
@@ -66,7 +84,7 @@ class MaintenanceController:
         if not questions:
             questions = list(self.quiz_bank_by_topic.get(topic_name, []))
         if len(questions) < 5:
-            questions.extend(MaintenanceContent.EXTRA_QUIZ_QUESTIONS)
+            questions.extend(self.extra_quiz_questions)
         return questions[:5]
 
     def start_quiz_for_current(self):

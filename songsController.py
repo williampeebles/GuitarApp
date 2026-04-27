@@ -1,25 +1,34 @@
 import webbrowser
-from songsContent import SongsContent
+from contentLoader import load_content_file
 from databaseController import DatabaseController
 
 
 class SongsController:
     """Handles Songs tab behavior and data access."""
 
+    _content = None
+
+    @classmethod
+    def _get_content(cls):
+        if cls._content is None:
+            cls._content = load_content_file("songs_content.txt")
+        return cls._content
+
     def __init__(self, database_path=None):
         self.db = DatabaseController(database_path)
+        self.content = self._get_content()
 
     def get_background_image_path(self):
-        return SongsContent.BACKGROUND_IMAGE_PATH
+        return self.content["BACKGROUND_IMAGE_PATH"]
 
     def get_tab_title(self):
-        return SongsContent.TAB_TITLE
+        return self.content["TAB_TITLE"]
 
     def get_list_title(self):
-        return SongsContent.LIST_TITLE
+        return self.content["LIST_TITLE"]
 
     def get_empty_state_text(self):
-        return SongsContent.EMPTY_STATE_TEXT
+        return self.content["EMPTY_STATE_TEXT"]
 
     def get_song_tutorials(self):
         tutorials = []

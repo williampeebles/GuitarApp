@@ -1,10 +1,9 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from tabController import TabController, DEFAULT_CATEGORIES
-from fundamentalsContent import FundamentalsContent
-from maintenanceContent import MaintenanceContent
-from chordsContent import ChordsContent
-from database import Database
+from fundamentalsController import FundamentalsController
+from maintenanceController import MaintenanceController
+from chordsController import ChordsController
 from databaseController import DatabaseController
 
 class GuitarApp:
@@ -66,9 +65,9 @@ class GuitarApp:
         db_controller = DatabaseController()
         db_controller.seed_initial_data(
             category_names=DEFAULT_CATEGORIES,
-            fundamentals_lessons=FundamentalsContent.FUNDAMENTALS_LESSONS,
-            maintenance_lessons=MaintenanceContent.MAINTENANCE_LESSONS,
-            chord_names=ChordsContent.CHORD_NAMES,
+            fundamentals_lessons=FundamentalsController.get_fundamentals_lessons(),
+            maintenance_lessons=MaintenanceController.get_maintenance_lessons(),
+            chord_names=ChordsController.get_chord_names(),
         )
         db_controller.close()
         self.tab_controller.close()
@@ -91,18 +90,14 @@ class GuitarApp:
         
 
 if __name__ == "__main__":
-    # Initialize database schema
-    db = Database()
-    db.create_schema()
-    db.close()
-    
-    # Seed initial data
+    # Initialize database schema and seed data
     db_controller = DatabaseController()
+    db_controller.create_schema()
     db_controller.seed_initial_data(
         category_names=DEFAULT_CATEGORIES,
-        fundamentals_lessons=FundamentalsContent.FUNDAMENTALS_LESSONS,
-        maintenance_lessons=MaintenanceContent.MAINTENANCE_LESSONS,
-        chord_names=ChordsContent.CHORD_NAMES,
+        fundamentals_lessons=FundamentalsController.get_fundamentals_lessons(),
+        maintenance_lessons=MaintenanceController.get_maintenance_lessons(),
+        chord_names=ChordsController.get_chord_names(),
     )
     db_controller.close()
     

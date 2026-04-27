@@ -4,8 +4,7 @@ import tempfile
 import os
 
 from songsController import SongsController
-from songsContent import SongsContent
-from database import Database
+from databaseController import DatabaseController
 
 
 class TestSongsController(unittest.TestCase):
@@ -14,7 +13,7 @@ class TestSongsController(unittest.TestCase):
         self.db_path = temp.name
         temp.close()
 
-        schema_db = Database(self.db_path)
+        schema_db = DatabaseController(self.db_path)
         schema_db.create_schema()
         schema_db.close()
 
@@ -26,10 +25,13 @@ class TestSongsController(unittest.TestCase):
             os.remove(self.db_path)
 
     def test_content_accessors_return_songs_content_values(self):
-        self.assertEqual(self.controller.get_background_image_path(), SongsContent.BACKGROUND_IMAGE_PATH)
-        self.assertEqual(self.controller.get_tab_title(), SongsContent.TAB_TITLE)
-        self.assertEqual(self.controller.get_list_title(), SongsContent.LIST_TITLE)
-        self.assertEqual(self.controller.get_empty_state_text(), SongsContent.EMPTY_STATE_TEXT)
+        self.assertEqual(self.controller.get_background_image_path(), "wooden_bg.jpg")
+        self.assertEqual(self.controller.get_tab_title(), "Songs")
+        self.assertEqual(self.controller.get_list_title(), "Song Tutorials")
+        self.assertEqual(
+            self.controller.get_empty_state_text(),
+            "Build your personal guitar playlist here. Add any songs you want to learn, save their tutorial links, and keep your own custom practice list in one place.",
+        )
         self.assertEqual(self.controller.get_song_tutorials(), [])
 
     @patch("songsController.webbrowser.open_new")

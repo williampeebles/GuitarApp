@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import patch
 
 from fundamentalsController import FundamentalsController
-from fundamentalsContent import FundamentalsContent
 
 
 class TestFundamentalsController(unittest.TestCase):
@@ -67,8 +66,10 @@ class TestFundamentalsController(unittest.TestCase):
 
     # Every listed fundamentals lesson should have a dedicated 5-question quiz bank.
     def test_all_fundamentals_lessons_have_five_lesson_specific_questions(self):
-        for lesson_name in FundamentalsContent.FUNDAMENTALS_LESSONS:
-            quiz = FundamentalsContent.QUIZ_BANK_BY_LESSON.get(lesson_name)
+        lessons = FundamentalsController.get_fundamentals_lessons()
+        quiz_bank = FundamentalsController._get_content()["QUIZ_BANK_BY_LESSON"]
+        for lesson_name in lessons:
+            quiz = quiz_bank.get(lesson_name)
             self.assertIsNotNone(quiz, msg=f"Missing quiz for lesson: {lesson_name}")
             self.assertEqual(len(quiz), 5, msg=f"Expected 5 questions for lesson: {lesson_name}")
 

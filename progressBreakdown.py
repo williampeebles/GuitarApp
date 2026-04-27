@@ -1,6 +1,6 @@
-from fundamentalsContent import FundamentalsContent
-from maintenanceContent import MaintenanceContent
-from chordsContent import ChordsContent
+from fundamentalsController import FundamentalsController
+from maintenanceController import MaintenanceController
+from chordsController import ChordsController
 
 
 class ProgressBreakdown:
@@ -15,10 +15,14 @@ class ProgressBreakdown:
     @classmethod
     def build(cls, fundamentals_completed, chords_completed, maintenance_completed):
         breakdown = []
+        fundamentals_lessons_by_topic = FundamentalsController.get_lesson_items_by_topic()
+        maintenance_lessons_by_topic = MaintenanceController.get_lesson_items_by_topic()
+        chord_layout = ChordsController.get_category_layout_data()
+        chord_names = ChordsController.get_chord_names()
 
-        fundamentals_total = sum(len(items) for items in FundamentalsContent.LESSON_ITEMS_BY_TOPIC.values())
+        fundamentals_total = sum(len(items) for items in fundamentals_lessons_by_topic.values())
         fundamentals_subsections = []
-        for topic_name, lessons in FundamentalsContent.LESSON_ITEMS_BY_TOPIC.items():
+        for topic_name, lessons in fundamentals_lessons_by_topic.items():
             completed = sum(1 for lesson in lessons if lesson in fundamentals_completed)
             fundamentals_subsections.append({
                 "name": topic_name,
@@ -31,7 +35,7 @@ class ProgressBreakdown:
         })
 
         chords_subsections = []
-        for section in ChordsContent.CATEGORY_LAYOUT:
+        for section in chord_layout:
             section_chords = []
             for group in section.get("groups", []):
                 if group.get("item_type") == "chord":
@@ -44,13 +48,13 @@ class ProgressBreakdown:
             })
         breakdown.append({
             "name": "Chords",
-            "percent": cls._percentage(len(chords_completed), len(ChordsContent.CHORD_NAMES)),
+            "percent": cls._percentage(len(chords_completed), len(chord_names)),
             "subsections": chords_subsections,
         })
 
-        maintenance_total = sum(len(items) for items in MaintenanceContent.LESSON_ITEMS_BY_TOPIC.values())
+        maintenance_total = sum(len(items) for items in maintenance_lessons_by_topic.values())
         maintenance_subsections = []
-        for topic_name, lessons in MaintenanceContent.LESSON_ITEMS_BY_TOPIC.items():
+        for topic_name, lessons in maintenance_lessons_by_topic.items():
             completed = sum(1 for lesson in lessons if lesson in maintenance_completed)
             maintenance_subsections.append({
                 "name": topic_name,

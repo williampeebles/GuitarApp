@@ -81,8 +81,8 @@ class TestTabController(unittest.TestCase):
         dashboard_instance.close.assert_called_once()
         fundamentals_instance.close.assert_called_once()
         chords_instance.close.assert_called_once()
+        songs_instance.close.assert_called_once()
         maintenance_instance.close.assert_called_once()
-        songs_instance.close.assert_not_called()
 
 
 if __name__ == "__main__":

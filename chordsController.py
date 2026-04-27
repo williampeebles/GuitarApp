@@ -1,4 +1,4 @@
-from chordsContent import ChordsContent
+from contentLoader import load_content_file
 from databaseController import DatabaseController
 from chordInfoFormatter import ChordInfoFormatter
 
@@ -6,13 +6,30 @@ from chordInfoFormatter import ChordInfoFormatter
 class ChordsController:
     """Provides chord data for the chords GUI."""
 
+    _content = None
+
+    @classmethod
+    def _get_content(cls):
+        if cls._content is None:
+            cls._content = load_content_file("chords_content.txt")
+        return cls._content
+
+    @classmethod
+    def get_chord_names(cls):
+        return tuple(cls._get_content()["CHORD_NAMES"])
+
+    @classmethod
+    def get_category_layout_data(cls):
+        return cls._get_content()["CATEGORY_LAYOUT"]
+
     def __init__(self):
         self.db = DatabaseController()
-        self.category_layout = ChordsContent.CATEGORY_LAYOUT
-        self.chord_data = ChordsContent.CHORD_DATA
-        self.fingerings = ChordsContent.FINGERINGS
-        self.default_chord = ChordsContent.DEFAULT_CHORD
-        self.chord_names = ChordsContent.CHORD_NAMES
+        content = self._get_content()
+        self.category_layout = content["CATEGORY_LAYOUT"]
+        self.chord_data = content["CHORD_DATA"]
+        self.fingerings = content["FINGERINGS"]
+        self.default_chord = content["DEFAULT_CHORD"]
+        self.chord_names = tuple(content["CHORD_NAMES"])
         self.category_id = None
         self.mastered_chords = set()
         self._load_mastered_chords()
